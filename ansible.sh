@@ -2,8 +2,8 @@
 
 set -e
 
-echo 'installing ansible...'
-sudo pip install 'setuptools>=18.3,<34.0' 'ansible>=2.4,<2.5'
+#echo 'installing ansible...'
+#sudo pip install 'setuptools>=18.3,<34.0' 'ansible>=2.4,<2.5'
 
 echo 'installing roles'
 ansible-galaxy install elastic.elasticsearch,5.5.1
