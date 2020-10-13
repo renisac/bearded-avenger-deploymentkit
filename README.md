@@ -1,14 +1,28 @@
 # Getting Started
 
-## NOTES:
-
 * this sets up the latest versions of cifv3 and dependencies
 * cif and the dependencies run in a python 3.5 venv
-* Currently only Ubuntu 16.04 is supported
+
+## Working
+
+* Ubuntu 16.04
+  * sqlite3 or ES backend
+  * pytests and bootstrap tests
+
+## Todo
+
+* fix sdist.yml (cif-ansible-role repo)
+* Docker support
+* investigate newer OS
+* investigate newer python version
+
+## Wontfix
+
+* CentOS/RHEL support
 
 ## Installation
 
-* do all this as root
+* do all of this as root
 
 * clone this repo
 
@@ -30,7 +44,15 @@
         cd bearded-avenger-deploymentkit
         CIF_ANSIBLE_ES='localhost:9200'; /bin/bash easybutton.sh
 
-## Todo
+* other useful env vars
+
+  * run bootstrap tests
+
+        CIF_BOOTSTRAP_TEST=1
+
+  * ES upsert mode (use only with ES backend)
+
+        CIF_STORE_ES_UPSERT_MODE=1
 
 ---
 
