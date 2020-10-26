@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+
+if [ -z "${DOCKER_HTTPS}" ]
+then
+  while true; do sleep 1; done
+fi
+
+/usr/sbin/nginx -g "daemon off;"
+
