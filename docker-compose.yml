@@ -9,7 +9,7 @@ services:
     ports:
       - "5000:5000/tcp"
       #- "8443:443/tcp"
-    environment:
+    #environment:
       #CIF_TOKEN: ''
       #CIF_HUNTER_TOKEN: ''
       #CSIRTG_SMRT_TOKEN: ''
