@@ -49,7 +49,8 @@ RUN mkdir -p /etc/resolvconf/resolv.conf.d \
 
 COPY ./ /tmp/badk/
 WORKDIR /tmp/badk/ubuntu16
-RUN ansible-playbook -i "localhost," -c local site.yml -vv
+RUN ansible-galaxy install elastic.elasticsearch,5.5.1 \
+  && ansible-playbook -i "localhost," -c local site.yml -vv
 
 RUN apt-get --no-install-recommends install -y vim less tmux htop
 
