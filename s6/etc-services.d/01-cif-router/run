@@ -3,9 +3,12 @@
 export CIF_LOGLEVEL=DEBUG
 export CIF_RUNTIME_PATH="/home/cif/run/"
 export CIF_DATA_PATH="/var/lib/cif"
-#export CIF_STORE_STORE="sqlite"
-#export CIF_STORE_NODES="localhost:9200"
-export CIF_STORE_STORE="${CIF_STORE_STORE}"
+if [ ! -z ${CIF_STORE_STORE} ]
+then
+  export CIF_STORE_STORE="${CIF_STORE_STORE}"
+else
+  export CIF_STORE_STORE='sqlite'
+fi
 export CIF_STORE_NODES="${CIF_STORE_NODES}"
 export CIF_ROUTER_CONFIG_PATH="/etc/cif/cif-router.yml"
 export CIF_HUNTER_EXCLUDE="osint.bambenekconsulting.com:dga"
