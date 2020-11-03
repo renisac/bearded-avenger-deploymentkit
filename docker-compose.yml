@@ -14,7 +14,7 @@ services:
       #CIF_HUNTER_TOKEN: ''
       #CSIRTG_SMRT_TOKEN: ''
       #CIF_HTTPD_LISTEN: '0.0.0.0'
-      #DOCKER_NO_SMRT: 1
+      #SERVICE_STOP_SMRT: 1
       #DOCKER_HTTPS: 1
     #volumes:
     #  - './:/shared'

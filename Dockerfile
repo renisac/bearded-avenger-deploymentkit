@@ -36,6 +36,7 @@ RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-
   python3-venv \
   python3-virtualenv \
   libmagic1 \
+  curl \
 && python3 -m pip install --upgrade \
   pip \
   setuptools \

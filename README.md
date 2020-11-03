@@ -88,6 +88,7 @@
 
         CIF_TOKEN
         CIF_HUNTER_TOKEN
+        CIF_HTTPD_TOKEN
         CSIRTG_SMRT_TOKEN
 
   * set cif-httpd to listen externally (defaults to 127.0.0.1:5000)
@@ -96,7 +97,7 @@
 
   * stop smrt service from running
 
-        DOCKER_NO_SMRT=1
+        SERVICE_STOP_SMRT=1
 
   * enable https
 
