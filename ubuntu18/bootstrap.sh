@@ -15,12 +15,17 @@ echo 'installing the basics'
 
 apt-get update
 apt-get -y dist-upgrade
-apt-get install -y build-essential python3-dev python3-minimal python3-pip python3-venv python3-virtualenv python-virtualenv
+apt-get install -y build-essential python3-dev python3-minimal python3-pip python3-venv python3-virtualenv
 #apt-get install -y wget unzip openssh-client
 apt-get install -y openssh-client
 
 #sudo pip install pip --upgrade
-python3 -m pip install --upgrade pip setuptools wheel cryptography
+#python3 -m pip install --upgrade 'pip<21.0'
+python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade setuptools
+python3 -m pip install --upgrade wheel
+python3 -m pip install --upgrade cryptography
+#python3 -m pip install --upgrade pip setuptools wheel cryptography
 python3 -m pip install --upgrade 'ansible<2.6'
 #python3 -m pip install --upgrade 'pytest>=2.8.0,<3.0'
 

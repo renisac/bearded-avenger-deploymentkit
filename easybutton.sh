@@ -50,48 +50,10 @@ fi
 
 case $OS in
     "Ubuntu" )
-    	if [ "$VER" == "14.04" ]; then
-    	    echo "14.04 is no longer supported, switch to 16.04 LTS (Server)"
-    	elif [ "$VER" == "16.04" ]; then
-    	    cd ubuntu16
+    	if [ "$VER" == "18.04" ]; then
+    	    cd ubuntu18
     	    bash bootstrap.sh
     	else
-    	    echo "Currently only 16.04 LTS (Server) is supported"
-    		echo "We accept Pull Requests! =)"
-       	fi
-       	;;
-
-    "Debian" )
-        echo 'Debian not yet supported...'
-        echo "We accept Pull Requests! =)"
-        exit 1;;
-
-    "Darwin" )
-        echo 'Darwin not yet supported...'
-        echo "We accept Pull Requests! =)"
-        exit 1;;
-
-    "Red Hat Enterprise Linux Server" )
-       if [ "$VER" == '7.3' ]; then
-            cd centos7
-            RHEL='1' bash bootstrap.sh
-        elif [ "$VER" == '7.4' ]; then
-            cd centos7
-            RHEL='1' bash bootstrap.sh
-        else
-            echo 'only RHEL 7.3|7.4 are supported'
-            echo "We accept Pull Requests! =)"
-        fi
-        ;;
-
-    "CentOS Linux" )
-        if [ "$VER" == '7' ]; then
-            cd centos7
-            bash bootstrap.sh
-        else
-            echo 'only CentOS 7 is supported'
-            echo "We accept Pull Requests! =)"
-        fi
-        ;;
-
+    	    echo "Currently only 18.04 LTS (Server) is supported"
+        fi;;
 esac

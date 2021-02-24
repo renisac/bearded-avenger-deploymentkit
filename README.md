@@ -1,11 +1,13 @@
 # Getting Started
 
+* this deployment runs on Ubuntu 18.04
+* cif and the dependencies run in a python 3.6 venv
+  * python 3.6 is the version shipped with Ubuntu 18.04
 * this sets up the latest versions of cifv3 and dependencies
-* cif and the dependencies run in a python 3.5 venv
 
 ## Working
 
-* Ubuntu 16.04
+* Ubuntu 18.04
   * sqlite3 or ES backend
   * pytests and bootstrap tests
 
@@ -13,8 +15,6 @@
 
 * fix sdist.yml (cif-ansible-role repo)
 * Docker support
-* investigate newer OS
-* investigate newer python version
 
 ## Wontfix
 
@@ -26,33 +26,38 @@
 
 * clone this repo
 
-      git clone https://github.com/chodonne/bearded-avenger-deploymentkit
+      git clone --branch 1804 https://github.com/chodonne/bearded-avenger-deploymentkit
 
 * clone the cif-ansible-role into proper location
 
-      git clone https://github.com/chodonne/cif-ansible-role bearded-avenger-deploymentkit/roles/csirtgadgets.cif
+      git clone --branch 1804 https://github.com/chodonne/cif-ansible-role bearded-avenger-deploymentkit/roles/csirtgadgets.cif
 
-* choose a backend for the installation
+* install options
 
   * install with sqlite backend (default)
 
         cd bearded-avenger-deploymentkit
         /bin/bash easybutton.sh
 
-  * install with Elastic backend
+  * install with Elastic backend and do bootstrap tests (this just adds all 3 env vars listed below before running easybutton.sh)
 
         cd bearded-avenger-deploymentkit
-        CIF_ANSIBLE_ES='localhost:9200'; /bin/bash easybutton.sh
+        /bin/bash easybutton_with_es_and_bootstrap_tests.sh
 
-* other useful env vars
+  * misc env vars
 
-  * run bootstrap tests
+    * install with Elastic backend
 
-        CIF_BOOTSTRAP_TEST=1
+          CIF_ANSIBLE_ES='localhost:9200'
 
-  * ES upsert mode (use only with ES backend)
+    * ES upsert mode (use only with ES backend)
 
-        CIF_STORE_ES_UPSERT_MODE=1
+          CIF_STORE_ES_UPSERT_MODE=1
+
+    * run bootstrap tests
+
+          CIF_BOOTSTRAP_TEST=1
+
 
 ---
 
