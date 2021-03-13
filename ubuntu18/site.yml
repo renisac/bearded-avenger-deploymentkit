@@ -37,8 +37,12 @@
         cif_build_sdist: CIF_ANSIBLE_SDIST
       when: CIF_ANSIBLE_SDIST is defined
 
-    - import_tasks: tasks/main.yml
+    - name: set alternate smart.db path
+      set_fact:
+        smrt_db_path: "{{ CIF_SMRT_DB_PATH }}"
+      when: CIF_SMRT_DB_PATH is defined and CIF_SMRT_DB_PATH != ""
 
+    - import_tasks: tasks/main.yml
 
   roles:
     - { role: elastic.elasticsearch,
@@ -46,7 +50,7 @@
           node.data: true,
           node.master: true,
         },
-        es_version: "5.6.16",
+        es_version: "5.5.1",
         es_instance_name: 'cif',
         when: router_store_store is defined and router_store_store == 'elasticsearch'
       }

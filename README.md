@@ -58,6 +58,9 @@
 
           CIF_BOOTSTRAP_TEST=1
 
+    * change smrt.db directory
+
+          CIF_ANSIBLE_SMRT_DB_PATH='/new/path'
 
 ---
 
