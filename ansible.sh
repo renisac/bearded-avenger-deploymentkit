@@ -6,7 +6,7 @@ set -e
 #sudo pip install 'setuptools>=18.3,<34.0' 'ansible>=2.4,<2.5'
 
 echo 'installing roles'
-ansible-galaxy install elastic.elasticsearch,5.6.16
+ansible-galaxy install elastic.elasticsearch,5.5.1
 
 # test to see if we've linked this in development
 # install by default in production
