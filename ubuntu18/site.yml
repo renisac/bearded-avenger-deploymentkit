@@ -52,7 +52,8 @@
         },
         es_version: "5.5.1",
         es_instance_name: 'cif',
-        when: router_store_store is defined and router_store_store == 'elasticsearch'
+        #when: router_store_store is defined and router_store_store == 'elasticsearch'
+        when: router_store_store is defined and router_store_store == 'elasticsearch' and (DOCKER_BUILD is undefined or DOCKER_BUILD == 'no' or DOCKER_BUILD == "")
       }
     - { role: csirtgadgets.cif, tags: role-cif }
     - { role: nginx, tags: role-nginx }

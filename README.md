@@ -20,9 +20,7 @@
 
 * CentOS/RHEL support
 
-## Installation
-
-* do all of this as root
+## Setup
 
 * clone this repo
 
@@ -32,36 +30,99 @@
 
       git clone --branch 1804 https://github.com/chodonne/cif-ansible-role bearded-avenger-deploymentkit/roles/csirtgadgets.cif
 
-* install options
+## Installation (VM or bare metal)
+
+* do all of this as root
+
+* choose a backend for the installation
 
   * install with sqlite backend (default)
 
         cd bearded-avenger-deploymentkit
         /bin/bash easybutton.sh
 
+  * install with Elastic backend
+
+        cd bearded-avenger-deploymentkit
+        CIF_ANSIBLE_ES='localhost:9200'; /bin/bash easybutton.sh
+
   * install with Elastic backend and do bootstrap tests (this just adds all 3 env vars listed below before running easybutton.sh)
 
         cd bearded-avenger-deploymentkit
         /bin/bash easybutton_with_es_and_bootstrap_tests.sh
 
-  * misc env vars
+* other useful env vars
 
-    * install with Elastic backend
+  * run bootstrap tests
 
-          CIF_ANSIBLE_ES='localhost:9200'
+        CIF_BOOTSTRAP_TEST=1
 
-    * ES upsert mode (use only with ES backend)
+  * ES upsert mode (use only with ES backend)
 
-          CIF_STORE_ES_UPSERT_MODE=1
+        CIF_STORE_ES_UPSERT_MODE=1
 
-    * run bootstrap tests
+  * install with Elastic backend
 
-          CIF_BOOTSTRAP_TEST=1
+        CIF_ANSIBLE_ES='localhost:9200'
 
-    * change smrt.db directory
+  * change smrt.db directory
 
-          CIF_ANSIBLE_SMRT_DB_PATH='/new/path'
+        CIF_ANSIBLE_SMRT_DB_PATH='/new/path'
+
+## Docker
+
+* Requirements: have docker and docker-compose installed
+
+* build image (same for sqlite3 or ES backends)
+
+      cd bearded-avenger-deploymentkit
+      docker-compose build
+
+* To use the sqlite backend: 
+
+      docker-compose up -d
+
+* to use the Elastic backend:
+
+      cp docker-compose.elasticsearch.yml docker-compose.override.yml
+      docker-compose up -d
+
+* get a shell on running container, switch to cif user, and test connectivity
+
+      docker-compose exec cifv3 /bin/bash
+      sudo -u cif -i
+      cif -p
+
+* useful env vars
+
+  * set API keys for admin, hunter, and smrt at container runtime.
+    API keys are 80 character hexidecimal strings.
+
+        CIF_TOKEN
+        CIF_HUNTER_TOKEN
+        CIF_HTTPD_TOKEN
+        CSIRTG_SMRT_TOKEN
+
+  * set cif-httpd to listen externally (defaults to 127.0.0.1:5000)
+
+        CIF_HTTPD_LISTEN="0.0.0.0"
+
+  * prevent smrt service from running
+
+        SERVICE_STOP_SMRT=1
+
+  * enable https
+
+        DOCKER_HTTPS=1
+
+
+    * If using the docker-compose.yml file, be sure to expose the https port 
+    * to override the self signed certificates, bind mount the correct certs
+      at the following paths:
+
+          ssl_certificate /etc/nginx/ssl/nginx.crt;
+          ssl_certificate_key /etc/nginx/ssl/nginx.key;
 
 ---
 
-[See the Wiki...](https://github.com/csirtgadgets/bearded-avenger-deploymentkit/wiki)
+[Original Wiki](https://github.com/csirtgadgets/bearded-avenger-deploymentkit/wiki)
