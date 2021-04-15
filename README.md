@@ -78,7 +78,7 @@
       cd bearded-avenger-deploymentkit
       docker-compose build
 
-* To use the sqlite backend: 
+* To use the sqlite backend:
 
       docker-compose up -d
 
@@ -116,7 +116,7 @@
         DOCKER_HTTPS=1
 
 
-    * If using the docker-compose.yml file, be sure to expose the https port 
+    * If using the docker-compose.yml file, be sure to expose the https port
     * to override the self signed certificates, bind mount the correct certs
       at the following paths:
 
