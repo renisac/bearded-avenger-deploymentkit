@@ -10,11 +10,11 @@
 * Ubuntu 18.04
   * sqlite3 or ES backend
   * pytests and bootstrap tests
+  * Docker support
 
 ## Todo
 
 * fix sdist.yml (cif-ansible-role repo)
-* Docker support
 
 ## Wontfix
 
