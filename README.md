@@ -4,6 +4,7 @@
 * cif and the dependencies run in a python 3.6 venv
   * python 3.6 is the version shipped with Ubuntu 18.04
 * this sets up the latest versions of cifv3 and dependencies
+* this repo has integrated the csirtgadgets.cif Ansible role
 
 ## Working
 
@@ -19,16 +20,6 @@
 ## Wontfix
 
 * CentOS/RHEL support
-
-## Setup
-
-* clone this repo
-
-      git clone --branch 1804 https://github.com/chodonne/bearded-avenger-deploymentkit
-
-* clone the cif-ansible-role into proper location
-
-      git clone --branch 1804 https://github.com/chodonne/cif-ansible-role bearded-avenger-deploymentkit/roles/csirtgadgets.cif
 
 ## Installation (VM or bare metal)
 
