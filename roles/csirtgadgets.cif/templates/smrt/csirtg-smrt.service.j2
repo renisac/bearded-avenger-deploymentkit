@@ -1,0 +1,26 @@
+[Unit]
+Description=csirtg-smrt service
+
+[Service]
+PermissionsStartOnly=true
+Type=simple
+User={{ smrt_user | default(smrt.user) }}
+Group={{ smrt_group | default(smrt.group) }}
+RuntimeDirectory=smrt
+RuntimeDirectoryMode=0775
+PIDFile=/run/smrt/csirtg-smrt.pid
+ExecStart={{ cif_venv | default ('/usr/local') }}/bin/csirtg-smrt -v --no-verify-ssl --skip-invalid --remember --service --client cif --fireball --delay 5 --config /etc/cif/csirtg-smrt.yml
+KillMode=process
+Restart=on-failure
+KillSignal=SIGINT
+TimeoutStopSec=15
+LimitAS=infinity
+LimitRSS=infinity
+LimitCORE=infinity
+LimitNOFILE=65536
+Nice=-1
+
+EnvironmentFile=-/etc/smrt.env
+
+[Install]
+WantedBy=multi-user.target

@@ -1,5 +1,7 @@
-roles/**/*
-!roles/nginx
+!/roles/
+/roles/*
+!/roles/nginx/
+!/roles/csirtgadgets.cif/
 *.retry
 # Byte-compiled / optimized / DLL files
 __pycache__/

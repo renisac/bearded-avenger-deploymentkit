@@ -1,0 +1,15 @@
+---
+
+cif_user: cif
+cif_group: cif
+cif_etc_path: '/etc/cif'
+cif_home: '/home/{{ cif_user }}'
+cif_user_config_path: "{{ cif_home }}/.cif.yml"
+cif_venv: '/cif_venv'
+
+cif_smrt_enabled: "{{ smrt_enabled | default(true) }}"
+cif_router_enabled: "{{ router_enabled | default(true) }}"
+
+cif_router_store_args: ''
+
+router_runtime_path: '/home/cif/run/'

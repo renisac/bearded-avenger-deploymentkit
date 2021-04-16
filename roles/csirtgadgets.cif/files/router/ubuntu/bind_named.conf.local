@@ -1,0 +1,34 @@
+// {{ ansible_managed }}
+// bypass any forwarders
+
+
+zone "sesv4.ren-isac.aws" {
+    forward only;
+    type forward;
+    forwarders { 172.31.0.2; };
+};
+
+
+zone "ren-isac.aws" {
+    forward only;
+    type forward;
+    forwarders { 172.31.0.2; };
+};
+
+zone "cymru.com" {
+    forward only;
+    type forward;
+    forwarders { };
+};
+
+zone "zen.spamhaus.org" {
+    forward only;
+    type forward;
+    forwarders { };
+};
+
+zone "dbl.spamhaus.org" {
+    forward only;
+    type forward;
+    forwarders { };
+};

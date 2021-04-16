@@ -1,0 +1,63 @@
+---
+- name: 'set store args'
+  set_fact:
+    cif_router_store_args: '--nodes {{ router_store_nodes }}'
+  when: router_store_store is defined and router_store_store == 'elasticsearch'
+
+- stat: path="{{ cif_user_config_path }}"
+  register: f
+
+- name: 'generate cif admin token'
+  shell:
+    CIF_DATA_PATH={{ router_data_path | default(router.data_path) }}
+    CIF_RUNTIME_PATH={{ router_runtime_path | default(router.runtime_path) }}
+    {{ cif_venv | default ('/usr/local') }}/bin/cif-store
+    --runtime-path {{ router_runtime_path | default(router.runtime_path) }}
+    --store {{ router_store_store | default(router.store.store) }}
+    --token-create-admin
+    --config-path {{ cif_user_config_path }}
+    -d {{ cif_router_store_args }}
+  when: not f.stat.exists
+
+- name: 'update permissions'
+  file: path={{ cif_user_config_path }} owner={{ router.user }} group={{ router.group }} mode=0660
+
+
+# smrt
+- stat: path={{ smrt_config_path | default(smrt.config_path) }}
+  register: f
+
+- name: 'generate csirtg-smrt token'
+  shell:
+    CIF_DATA_PATH={{ router_data_path | default(router.data_path) }}
+    CIF_RUNTIME_PATH={{ router_runtime_path | default(router.runtime_path) }}
+    {{ cif_venv | default ('/usr/local') }}/bin/cif-store
+    --store {{ router_store_store | default(router.store.store) }}
+    --runtime-path {{ smrt_runtime_path | default(smrt.runtime_path) }}
+    --token-create-smrt
+    --config-path {{ smrt_config_path | default(smrt.config_path) }}
+    -d {{ cif_router_store_args }}
+  when: not f.stat.exists
+
+- name: 'update permissions'
+  file: path={{ smrt_config_path | default(smrt.config_path) }} owner={{ smrt_user | default(smrt.user) }} group={{ smrt_group | default(smrt.group) }} mode=0660
+
+
+# hunter
+- stat: path={{ router_config_path | default(router.config_path) }}
+  register: f
+
+- name: 'generate cif hunter token'
+  shell:
+    CIF_DATA_PATH={{ router_data_path | default(router.data_path) }}
+    CIF_RUNTIME_PATH={{ router_runtime_path | default(router.runtime_path) }}
+    {{ cif_venv | default ('/usr/local') }}/bin/cif-store
+    --store {{ router_store_store | default(router.store.store) }}
+    --runtime-path {{ router_runtime_path | default(router.runtime_path) }}
+    --token-create-hunter
+    --config-path {{ router_config_path | default(router.config_path) }}
+    -d {{ cif_router_store_args }}
+  when: not f.stat.exists
+
+- name: 'update permissions'
+  file: path={{ router_config_path | default(router.config_path) }} owner={{ router_user | default(router.user) }} group={{ router_group | default(router.group) }} mode=0660

@@ -1,0 +1,69 @@
+---
+- name: install deps
+  apt:
+    state: latest
+    pkg: "{{ item }}"
+  with_items:
+    - geoipupdate
+    - libgeoip-dev
+
+- name: configure /etc/security/limits.conf
+  lineinfile: dest=/etc/security/limits.conf line="cif             soft    nofile            20000"
+
+- name: configure /etc/security/limits.conf
+  lineinfile: dest=/etc/security/limits.conf line="cif             hard    nofile            30000"
+
+
+# bind 9
+- name: Install bind9
+  apt: pkg=bind9 state=installed update_cache=true cache_valid_time=86400
+
+- name: "Setting named.conf.options"
+  copy: src=router/ubuntu/bind_named.conf.options dest=/etc/bind/named.conf.options
+
+- name: "Setting named.conf.local"
+  copy: src=router/ubuntu/bind_named.conf.local dest=/etc/bind/named.conf.local
+
+- name: "Setting dhclient.conf"
+  copy: src=router/ubuntu/bind_dhclient.conf dest=/etc/dhcp/dhclient.conf
+
+#- name: "Setting /etc/resolvconf/resolv.conf.d/base"
+#  copy: src=router/ubuntu/bind_head dest=/etc/resolvconf/resolv.conf.d/head
+
+# https://moss.sh/name-resolution-issue-systemd-resolved/
+- name: "Setting systemd-resolved to use localhost"
+  copy: src=router/ubuntu/bind_resolved dest=/etc/systemd/resolved.conf
+
+- name: 'copying bind9 default'
+  copy: src=router/ubuntu/bind_default dest=/etc/default/bind9
+
+- name: enable services at boot
+  systemd: name=bind9 enabled=yes state=restarted daemon_reload=yes
+  when: DOCKER_BUILD is undefined or DOCKER_BUILD == "no"
+
+- name: Restart Network
+  # Restart the network, sleep 3 seconds, return the
+  # exit code returned by "service network restart".
+  # This is to work-around a glitch in Ansible where
+  # it detects a successful network restart as a failure.
+  #command: perl -e 'my $exit_code = system("service networking restart"); sleep 3; $exit_code = $exit_code >> 8; exit($exit_code);'
+  command: systemctl restart systemd-networkd
+  when: DOCKER_BUILD is undefined or DOCKER_BUILD == "no"
+
+#- name: Update resolvconf
+#  command: resolvconf -u
+
+# geoip
+- name: create /etc/geopip.conf
+  template: src=router/GeoIP.conf.j2 dest=/etc/GeoIP.conf owner=root group=root mode=0660
+
+- name: create GeoIP path /usr/local/share/GeoIP
+  file: path=/usr/local/share/GeoIP state=directory owner=root group=root mode=0755
+
+- name: update geoip databases
+  command: geoipupdate -v
+  ignore_errors: True
+
+- name: create geoip update cron
+  cron: name="geoip update" user="root" job="/usr/bin/geoipupdate"
+        cron_file=geoipupdate day=01

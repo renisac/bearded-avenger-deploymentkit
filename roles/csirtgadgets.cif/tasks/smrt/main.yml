@@ -1,0 +1,5 @@
+---
+- import_tasks: paths.yml
+- import_tasks: rules.yml
+- import_tasks: services.yml
+  when: DOCKER_BUILD is undefined or DOCKER_BUILD == 'no' or DOCKER_BUILD == ""

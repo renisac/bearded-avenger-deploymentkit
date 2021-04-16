@@ -1,0 +1,17 @@
+---
+- name: "Check for version 18.04"
+  fail: msg="Must be version 18.04 or higher"
+  when: ansible_distribution_version | version_compare('18.04', '<')
+
+- name: install deps
+  apt:
+    state: latest
+    pkg: "{{ item }}"
+  with_items:
+    - build-essential
+    - python3-dev
+    - python3-minimal
+    - python3-pip
+    - python3-venv
+    - python3-virtualenv
+    - sqlite3

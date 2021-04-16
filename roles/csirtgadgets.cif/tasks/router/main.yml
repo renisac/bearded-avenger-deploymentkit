@@ -1,0 +1,17 @@
+---
+- import_tasks: ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+#- import_tasks: centos.yml
+#  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- import_tasks: paths.yml
+  tags: paths
+
+- import_tasks: tokens.yml
+  when: cif_router_enabled and smrt_cif_token is undefined and router_hunter_token is undefined
+  tags: tokens
+
+- import_tasks: services.yml
+  when: DOCKER_BUILD is undefined or DOCKER_BUILD == 'no' or DOCKER_BUILD == ""
+  tags: services
