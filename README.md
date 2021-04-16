@@ -1,5 +1,8 @@
 # Getting Started
 
+This is the legacy branch for running on Ubuntu 16.04. If you are starting
+from scratch, please use the main branch which runs on Ubuntu 18.04
+
 * this sets up the latest versions of cifv3 and dependencies
 * cif and the dependencies run in a python 3.5 venv
 * The docker components are "beta"
@@ -18,23 +21,10 @@
 * Docker
   * Elastic backend
   * split out images to router/httpd and smrt
-* investigate newer OS
-* investigate newer python version
 
 ## Wontfix
 
 * CentOS/RHEL support
-
-## Setup
-
-* clone this repo
-
-      git clone https://github.com/chodonne/bearded-avenger-deploymentkit
-
-* clone the cif-ansible-role into proper location
-
-      git clone https://github.com/chodonne/cif-ansible-role bearded-avenger-deploymentkit/roles/csirtgadgets.cif
-
 
 ## Installation (VM or bare metal)
 
