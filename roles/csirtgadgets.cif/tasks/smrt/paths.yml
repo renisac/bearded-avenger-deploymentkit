@@ -1,0 +1,20 @@
+---
+
+- name: Ensure paths exists
+  file: path="{{ item }}" state=directory mode=750 owner="{{ smrt_user | default(smrt.user) }}" group="{{ smrt_group | default(smrt.group) }}"
+  with_items:
+    - "{{ smrt_runtime_path | default(smrt.runtime_path) }}"
+    - "{{ smrt_rules_path | default(smrt.rules_path) }}"
+    - "{{ smrt_cache_path | default(smrt.cache_path) }}"
+
+- name: copy /etc/defaults/smrt
+  template: src=smrt/defaults.j2 dest=/etc/default/smrt mode=0660 owner="{{ smrt_user | default(smrt.user) }}" group="{{ smrt_group | default(smrt.group) }}"
+
+- name: systemd env file
+  template: src=smrt/smrt.env.j2 dest=/etc/smrt.env mode=0660 owner="{{ smrt_user | default(smrt.user) }}" group="{{ smrt_group | default(smrt.group) }}"
+
+- name: profile
+  template: src=smrt/smrtrc.j2 dest="{{ smrt_home | default(smrt.home) }}/.smrtrc" mode=0660 owner="{{ smrt_user | default(smrt.user) }}" group="{{ smrt_group | default(smrt.group) }}"
+
+- name: Ensure .smrtrc is linked to .profile
+  lineinfile: dest="{{ cif_home }}/.profile" line=". ~/.smrtrc"

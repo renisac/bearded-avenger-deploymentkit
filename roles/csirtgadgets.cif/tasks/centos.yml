@@ -1,0 +1,42 @@
+---
+- name: "Check for 64-bit"
+  fail: msg="Must be install 64-bit"
+  when: ansible_architecture != "x86_64"
+
+- name: "Check for Centos"
+  fail: msg="Must be CentOS, {{ ansible_distribution }}"
+  when: ansible_distribution != "CentOS" and ansible_distribution != "RedHat"
+
+- name: "Check for version 7"
+  fail: msg="Must be version 7, {{ ansible_distribution_version }}"
+  when: (ansible_distribution_version < "7" or ansible_distribution_version >= "8")
+
+- name: set router_bin_path to /bin
+  set_fact: router_bin_path='/bin'
+
+- name: install EPEL
+  yum: name=epel-release state=latest
+
+- name: install deps
+  yum:
+    state: present
+    pkg: "{{ item }}"
+  with_items:
+    - "@Development Tools"
+    - openssl-devel
+    - sqlite-devel
+    - bzip2-devel
+    - bind-utils
+    - libxml2-python
+    - libxml2-devel
+    - libxslt
+    - libxslt-devel
+
+- name: update python-dateutil
+  pip: name="python-dateutil==2.6"
+
+- name: update flask-limiter
+  pip: name='Flask-Limiter>=0.9.4'
+
+- name: work-around for requests
+  pip: name="requests<2.15"

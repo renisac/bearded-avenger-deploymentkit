@@ -1,0 +1,27 @@
+---
+- name: "Check for 64-bit"
+  fail: msg="Must be install 64-bit"
+  when: ansible_architecture != "x86_64"
+
+- import_tasks: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- import_tasks: centos.yml
+  when: ansible_distribution == 'CentOS'
+
+- import_tasks: centos.yml
+  when: ansible_distribution == 'RedHat'
+
+- import_tasks: user.yml
+
+- import_tasks: dist.yml
+  when: cif_build_sdist is undefined or cif_build_sdist == ""
+
+- import_tasks: sdist.yml
+  when: cif_build_sdist is defined and cif_build_sdist != ""
+
+- import_tasks: router/main.yml
+  when: cif_router_enabled
+
+- import_tasks: smrt/main.yml
+  when: cif_smrt_enabled

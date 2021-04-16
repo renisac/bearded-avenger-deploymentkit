@@ -1,0 +1,54 @@
+---
+cif:
+  version: '3.0.0'
+  user: cif
+  group: cif
+  etc_path: /etc/cif
+  home: /home/cif
+  user_config_path: /home/cif/.cif.yml
+  release_url: "https://github.com/csirtgadgets/bearded-avenger"
+
+smrt:
+  user: "{{ cif_user }}"
+  group: "{{ cif_group }}"
+  home: "{{ cif_home }}"
+  runtime_path: /var/run/smrt
+  cache_path: /var/lib/smrt
+  data_path: /var/lib/smrt
+  rules_path: /etc/cif/rules
+  fireball_size: 500
+  goback_days: 3
+  enable_service: true
+  service_client: cif
+  config_path: '/etc/cif/csirtg-smrt.yml'
+
+router:
+  user: "{{ cif_user }}"
+  group: "{{ cif_group }}"
+  home: "/home/{{ cif_user }}"
+  runtime_path: "/var/run/{{ cif_user }}"
+  etc_path: '/etc/cif'
+  config_path: "{{ cif_etc_path }}/cif-router.yml"
+  data_path: "/var/lib/{{ cif_user }}"
+  store:
+    store: 'sqlite'
+    nodes: 'localhost:9200'
+
+  httpd:
+    fireball_size: 500
+    listen: 127.0.0.1
+    token:
+
+  hunter:
+    token:
+    exclude: 'osint.bambenekconsulting.com:dga'
+    threads: 2
+
+  gatherer:
+    threads: 2
+    geo_fqdn: 0
+
+geoip:
+  user: 999999
+  key:  "000000000000"
+  products: "GeoLite2-City GeoLite2-Country GeoLite2-ASN"
