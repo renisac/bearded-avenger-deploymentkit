@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+
   cifv3:
     container_name: cifv3
     image: cifv3
@@ -19,13 +20,7 @@ services:
       #CIF_HTTPD_LISTEN: '0.0.0.0'
       #SERVICE_STOP_SMRT: 1
       #DOCKER_HTTPS: 1
-    #volumes:
-    #  - './:/shared'
-    #  - './s6/etc-cont-init.d:/etc/cont-init.d'
-    #  - './s6/etc-services.d:/etc/services.d'
-    #  - './mycert.crt:/etc/nginx/ssl/nginx.crt'
-    #  - './mykey.key:/etc/nginx/ssl/nginx.key
-    #entrypoint: /bin/sh -c "while true; do sleep 1; done"
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
     container_name: elasticsearch_mini
