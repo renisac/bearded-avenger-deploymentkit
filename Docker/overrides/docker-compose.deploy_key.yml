@@ -3,7 +3,7 @@ version: "3"
 services:
   cifv3:
     build:
-      context: .
+      context: ./Docker
       args:
         - CIF_RELEASE_URL
         - CIF_BOOTSTRAP_TEST
