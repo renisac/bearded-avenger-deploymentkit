@@ -2,24 +2,21 @@ version: "3"
 
 services:
   cifv3:
-    build:
-      context: .
     container_name: cifv3
     image: cifv3
     ports:
       - "5000:5000/tcp"
       #- "8443:443/tcp"
     depends_on:
-      elasticsearch:
-        condition: service_healthy
+      - elasticsearch
     environment:
       CIF_TOKEN: 'foo'
       CIF_HUNTER_TOKEN: 'bar'
       CSIRTG_SMRT_TOKEN: 'baz'
       CIF_HTTPD_TOKEN: 'boo'
-      #CIF_HTTPD_LISTEN: '0.0.0.0'
       CIF_STORE_STORE: 'elasticsearch'
       CIF_STORE_NODES: 'elasticsearch:9200'
+      #CIF_HTTPD_LISTEN: '0.0.0.0'
       #SERVICE_STOP_SMRT: 1
       #DOCKER_HTTPS: 1
     #volumes:
