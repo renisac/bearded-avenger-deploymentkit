@@ -135,7 +135,9 @@
     src: "{{ github_deploy_key_file }}"
     dest: '/tmp/github_deploy_key'
     mode: '0600'
-  when: github_deploy_key_file is defined and github_deploy_key_file != ""
+  when:
+    - github_deploy_key_file is defined and github_deploy_key_file != ""
+    - DOCKER_BUILD is undefined or DOCKER_BUILD == 'no' or DOCKER_BUILD == ""
 
 - name: pull release from github (deploy key exists)
   git:

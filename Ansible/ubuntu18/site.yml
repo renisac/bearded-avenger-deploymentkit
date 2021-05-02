@@ -17,6 +17,8 @@
     - router_hunter_threads: "{{ lookup('env', 'CIF_HUNTER_THREADS') }}"
     - router_hunter_advanced: "{{ lookup('env', 'CIF_HUNTER_ADVANCED') }}"
     - router_gatherer_geo_fqdn: "{{ lookup('env', 'CIF_GATHERER_GEO_FQDN') }}"
+    - cif_release_url: "{{ lookup('env', 'CIF_RELEASE_URL') }}"
+    - github_deploy_key_file: "{{ lookup('env', 'GITHUB_DEPLOY_KEY_FILE') }}"
 
   pre_tasks:
 

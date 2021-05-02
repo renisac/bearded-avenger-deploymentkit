@@ -6,16 +6,12 @@
 * this sets up the latest versions of cifv3 and dependencies
 * this repo has integrated the csirtgadgets.cif Ansible role
 
-## Working
-
-* Ubuntu 18.04
-  * sqlite3 or ES backend
-  * pytests and bootstrap tests
-  * Docker support
-
 ## Todo
 
-* fix sdist.yml (cif-ansible-role repo)
+* VM amd Docker
+  * fix sdist.yml (cif-ansible-role repo)
+* Docker
+  * run bootstrap tests
 
 ## Wontfix
 
@@ -44,21 +40,12 @@
 
 * other useful env vars
 
-  * run bootstrap tests
-
-        CIF_BOOTSTRAP_TEST=1
-
-  * ES upsert mode (use only with ES backend)
-
-        CIF_STORE_ES_UPSERT_MODE=1
-
-  * install with Elastic backend
-
-        CIF_ANSIBLE_ES='localhost:9200'
-
-  * change smrt.db directory
-
-        CIF_ANSIBLE_SMRT_DB_PATH='/new/path'
+  | env var | example value | info |
+  | --- | --- | --- |
+  | CIF_BOOTSTRAP_TEST | 1 | run bootstrap tests |
+  | CIF_ANSIBLE_ES | 'localhost:9200' | install with Elastic backend |
+  | CIF_ANSIBLE_SMRT_DB_PATH | '/new/path' | change smrt.db directory |
+  | CIF_STORE_ES_UPSERT_MODE | 1 | ES upsert mode (use only with ES backend) |
 
 ## Docker
 
@@ -84,35 +71,36 @@
       sudo -u cif -i
       cif -p
 
-* useful env vars
-
-  * set API keys for admin, hunter, and smrt at container runtime.
-    API keys are 80 character hexidecimal strings.
-
-        CIF_TOKEN
-        CIF_HUNTER_TOKEN
-        CIF_HTTPD_TOKEN
-        CSIRTG_SMRT_TOKEN
-
-  * set cif-httpd to listen externally (defaults to 127.0.0.1:5000)
-
-        CIF_HTTPD_LISTEN="0.0.0.0"
-
-  * prevent smrt service from running
-
-        SERVICE_STOP_SMRT=1
-
-  * enable https
-
-        DOCKER_HTTPS=1
+* optional build args to pull from private Github repo (see overrides/docker-compose.deploy_key.yml)
 
 
-    * If using the docker-compose.yml file, be sure to expose the https port
+  | build arg | example value | info |
+  | --- | --- | --- |
+  | CIF_RELEASE_URL | git@github.com:renisac/sesv4_code.git | ssh address for repo |
+  | GITHUB_DEPLOY_KEY_FILE | /tmp/github_deploy_key | path for github deploy key in container |
+  | GITHUB_DEPLOY_KEY_BASE64 | n/a | base64 encoded private ssh key |
+
+* optional env vars
+
+  | env var | example value | info |
+  | --- | --- | --- |
+  | CIF_TOKEN | n/a |cif admin token |
+  | CIF_HUNTER_TOKEN | n/a |cif hunter token |
+  | CIF_HTTPD_TOKEN | n/a | cif httpd token |
+  | CSIRTG_SMRT_TOKEN | n/a | cif smrt token |
+  | CIF_HTTPD_LISTEN | "0.0.0.0" | cif-httpd to listen externally (defaults to 127.0.0.1:5000) |
+  | SERVICE_STOP_SMRT | 1 | prevent smrt service from running |
+  | DOCKER_HTTPS | 1 | enable https |
+
+  * DOCKER_HTTPS
+    * if using the docker-compose.yml file, be sure to expose the https port
     * to override the self signed certificates, bind mount the correct certs
       at the following paths:
 
           ssl_certificate /etc/nginx/ssl/nginx.crt;
           ssl_certificate_key /etc/nginx/ssl/nginx.key;
+
+  * see overrides/docker-compose.elasticsearch.yml for cif env vars for ES
 
 ---
 
