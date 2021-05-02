@@ -63,13 +63,6 @@ RUN if [ ! -z "$GITHUB_DEPLOY_KEY_BASE64" ] \
   && ansible-playbook -i "localhost," -c local site.yml -vv \
   && if [ -f "$GITHUB_DEPLOY_KEY_FILE" ] ; then rm -fv "$GITHUB_DEPLOY_KEY_FILE" ; fi
 
-#RUN if [ ! -z "$GITHUB_DEPLOY_KEY_BASE64" ] \
-#  ; then echo "$GITHUB_DEPLOY_KEY_BASE64" | base64 -d > "$GITHUB_DEPLOY_KEY_FILE" \
-#  ; fi \
-#  && chmod 0600 "$GITHUB_DEPLOY_KEY_FILE" \
-#  && ansible-playbook -i "localhost," -c local site.yml -vv \
-#  ; if [ -f "$GITHUB_DEPLOY_KEY_FILE" ] ; then rm -f "$GITHUB_DEPLOY_KEY_FILE" ; fi
-
 WORKDIR /root
 
 ADD https://keybase.io/justcontainers/key.asc /tmp/justcontainers.asc
