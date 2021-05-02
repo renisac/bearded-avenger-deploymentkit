@@ -14,6 +14,7 @@ services:
       #CIF_HUNTER_TOKEN: ''
       #CSIRTG_SMRT_TOKEN: ''
       #CIF_HTTPD_LISTEN: '0.0.0.0'
+      #CIF_BOOTSTRAP_TEST: 1
       #SERVICE_STOP_SMRT: 1
       #DOCKER_HTTPS: 1
     #volumes:

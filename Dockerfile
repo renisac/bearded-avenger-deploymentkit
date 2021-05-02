@@ -36,6 +36,7 @@ RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-
   libmagic1 \
   curl \
   gnupg \
+  ssh \
 && python3 -m pip install --upgrade \
   pip \
   setuptools \
@@ -49,8 +50,17 @@ RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-
 
 COPY ./ /tmp/badk/
 WORKDIR /tmp/badk/ubuntu18
-RUN ansible-galaxy install elastic.elasticsearch,5.5.1 \
-  && ansible-playbook -i "localhost," -c local site.yml -vv
+RUN ansible-galaxy install elastic.elasticsearch,5.5.1
+
+ARG CIF_RELEASE_URL
+ARG CIF_BOOTSTRAP_TEST
+ARG GITHUB_DEPLOY_KEY_FILE
+ARG GITHUB_DEPLOY_KEY_BASE64
+
+RUN if [ ! -z $GITHUB_DEPLOY_KEY_BASE64 ] ; then echo $GITHUB_DEPLOY_KEY_BASE64 | base64 -d > /tmp/github_deploy_key; fi
+RUN chmod 0600 /tmp/github_deploy_key
+
+RUN ansible-playbook -i "localhost," -c local site.yml -vv
 
 WORKDIR /root
 
