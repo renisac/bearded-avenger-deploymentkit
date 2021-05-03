@@ -3,7 +3,7 @@ version: "3"
 services:
   cifv3:
     build:
-      context: ./Docker
+      context: .
     container_name: cifv3
     image: cifv3
     ports:

@@ -51,7 +51,7 @@ RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-
 && mkdir -p /etc/resolvconf/resolv.conf.d \
 && mkdir /etc/cron.d
 
-COPY ./ /tmp/badk/
+COPY ./Ansible/ /tmp/badk/
 WORKDIR /tmp/badk/ubuntu18
 RUN ansible-galaxy install elastic.elasticsearch,5.5.1
 
@@ -59,6 +59,8 @@ RUN ansible-galaxy install elastic.elasticsearch,5.5.1
 RUN if [ ! -z "$GITHUB_DEPLOY_KEY_BASE64" ] \
     ; then echo "$GITHUB_DEPLOY_KEY_BASE64" | base64 -d > "$GITHUB_DEPLOY_KEY_FILE" \
   ; fi \
+  && echo "$(pwd)" \
+  && ls -al /tmp/badk/ \
   && chmod 0600 "$GITHUB_DEPLOY_KEY_FILE" \
   && ansible-playbook -i "localhost," -c local site.yml -vv \
   && if [ -f "$GITHUB_DEPLOY_KEY_FILE" ] ; then rm -fv "$GITHUB_DEPLOY_KEY_FILE" ; fi
