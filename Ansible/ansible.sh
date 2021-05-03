@@ -2,7 +2,6 @@
 
 set -e
 
-echo "pwd: $(pwd)"
 #echo 'installing ansible...'
 #sudo pip install 'setuptools>=18.3,<34.0' 'ansible>=2.4,<2.5'
 
