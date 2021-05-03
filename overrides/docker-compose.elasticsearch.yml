@@ -17,6 +17,7 @@ services:
       CIF_HTTPD_TOKEN: 'boo'
       CIF_STORE_STORE: 'elasticsearch'
       CIF_STORE_NODES: 'elasticsearch:9200'
+      CIF_STORE_ES_UPSERT_MODE: 1
       #CIF_HTTPD_LISTEN: '0.0.0.0'
       #SERVICE_STOP_SMRT: 1
       #DOCKER_HTTPS: 1
