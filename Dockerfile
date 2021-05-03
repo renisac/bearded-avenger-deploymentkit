@@ -4,9 +4,8 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG DOCKER_BUILD="yes"
 ARG CIF_ENABLE_INSTALL=1
 
-ARG CIF_RELEASE_URL
-ARG CIF_BOOTSTRAP_TEST
 ARG CIF_ANSIBLE_ES
+ARG CIF_RELEASE_URL
 ARG GITHUB_DEPLOY_KEY_BASE64
 ARG GITHUB_DEPLOY_KEY_FILE
 
@@ -59,8 +58,6 @@ RUN ansible-galaxy install elastic.elasticsearch,5.5.1
 RUN if [ ! -z "$GITHUB_DEPLOY_KEY_BASE64" ] \
     ; then echo "$GITHUB_DEPLOY_KEY_BASE64" | base64 -d > "$GITHUB_DEPLOY_KEY_FILE" \
   ; fi \
-  && echo "$(pwd)" \
-  && ls -al /tmp/badk/ \
   && chmod 0600 "$GITHUB_DEPLOY_KEY_FILE" \
   && ansible-playbook -i "localhost," -c local site.yml -vv \
   && if [ -f "$GITHUB_DEPLOY_KEY_FILE" ] ; then rm -fv "$GITHUB_DEPLOY_KEY_FILE" ; fi

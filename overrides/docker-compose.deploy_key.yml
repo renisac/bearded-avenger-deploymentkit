@@ -6,6 +6,5 @@ services:
       context: .
       args:
         - CIF_RELEASE_URL
-        - CIF_BOOTSTRAP_TEST
         - GITHUB_DEPLOY_KEY_FILE
         - GITHUB_DEPLOY_KEY_BASE64
