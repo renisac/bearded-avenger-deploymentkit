@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  cifv3:
+    build:
+      context: .
+      args:
+        - CIF_RELEASE_URL
+        - GITHUB_DEPLOY_KEY_FILE
+        - GITHUB_DEPLOY_KEY_BASE64

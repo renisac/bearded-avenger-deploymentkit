@@ -8,18 +8,3 @@ services:
     image: cifv3
     ports:
       - "5000:5000/tcp"
-      #- "8443:443/tcp"
-    #environment:
-      #CIF_TOKEN: ''
-      #CIF_HUNTER_TOKEN: ''
-      #CSIRTG_SMRT_TOKEN: ''
-      #CIF_HTTPD_LISTEN: '0.0.0.0'
-      #SERVICE_STOP_SMRT: 1
-      #DOCKER_HTTPS: 1
-    #volumes:
-    #  - './:/shared'
-    #  - './s6/etc-cont-init.d:/etc/cont-init.d'
-    #  - './s6/etc-services.d:/etc/services.d'
-    #  - './mycert.crt:/etc/nginx/ssl/nginx.crt'
-    #  - './mykey.key:/etc/nginx/ssl/nginx.key
-    #entrypoint: /bin/sh -c "while true; do sleep 1; done"
