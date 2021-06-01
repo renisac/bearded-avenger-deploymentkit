@@ -5,7 +5,7 @@ ARG DOCKER_BUILD="yes"
 ARG CIF_ENABLE_INSTALL=1
 
 ARG CIF_ANSIBLE_ES
-ARG CIF_RELEASE_URL
+ARG CIF_RELEASE_URL=${CIF_RELEASE_URL:-https://github.com/csirtgadgets/bearded-avenger}
 ARG GITHUB_DEPLOY_KEY_BASE64
 ARG GITHUB_DEPLOY_KEY_FILE
 
@@ -57,8 +57,8 @@ RUN ansible-galaxy install elastic.elasticsearch,5.5.1
 # Single step so that deploy key is not committed to image
 RUN if [ ! -z "$GITHUB_DEPLOY_KEY_BASE64" ] \
     ; then echo "$GITHUB_DEPLOY_KEY_BASE64" | base64 -d > "$GITHUB_DEPLOY_KEY_FILE" \
+    ; chmod 0600 "$GITHUB_DEPLOY_KEY_FILE" \
   ; fi \
-  && if [ -f "$GITHUB_DEPLOY_KEY_FILE" ] ; then chmod 0600 "$GITHUB_DEPLOY_KEY_FILE" ; fi \
   && ansible-playbook -i "localhost," -c local site.yml -vv \
   && if [ -f "$GITHUB_DEPLOY_KEY_FILE" ] ; then rm -fv "$GITHUB_DEPLOY_KEY_FILE" ; fi
 

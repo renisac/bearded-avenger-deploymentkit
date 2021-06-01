@@ -121,12 +121,14 @@
 
 - debug: msg="bearded-avenger install"
 
+- debug: msg="bearded-avenger repo {{ cif_release_url }}"
+
 - name: pull release from github (no deploy key)
   git:
     repo: "{{ cif_release_url | default(cif.release_url) }}"
     dest: /tmp/bearded-avenger
     #version: "{{ cif_version }}"
-    key_file: '/tmp/github_deploy_key'
+    #key_file: '/tmp/github_deploy_key'
     accept_hostkey: yes
   when: github_deploy_key_file is undefined or github_deploy_key_file == ""
 
