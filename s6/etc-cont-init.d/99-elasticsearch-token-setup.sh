@@ -26,12 +26,22 @@ else
   echo "Setting up tokens on fresh CIFv3 instance"
   rm -f /var/lib/cif/cif.db
 
+  if [ -z ${CIF_TOKEN} ]
+  then
+    CIF_TOKEN=$(openssl rand -hex 40 | cut -c 1-80)
+  fi
+
   echo ""
   echo "set admin token"
   echo "---" > /home/cif/.cif.yml
   echo "token: ${CIF_TOKEN}" >> /home/cif/.cif.yml
   /cif_venv/bin/cif-store -d --store elasticsearch --nodes ${CIF_STORE_NODES} \
     --token-create-admin --token ${CIF_TOKEN} --token-groups everyone
+
+  if [ -z ${CIF_HUNTER_TOKEN} ]
+  then
+    CIF_HUNTER_TOKEN=$(openssl rand -hex 40 | cut -c 1-80)
+  fi
 
   echo ""
   echo "set hunter token"
@@ -40,6 +50,11 @@ else
   /cif_venv/bin/cif-store -d --store elasticsearch --nodes ${CIF_STORE_NODES} \
     --token-create-hunter --token ${CIF_HUNTER_TOKEN} --token-groups everyone
 
+  if [ -z ${CSIRTG_SMRT_TOKEN} ]
+  then
+    CSIRTG_SMRT_TOKEN=$(openssl rand -hex 40 | cut -c 1-80)
+  fi
+
   echo ""
   echo "set smrt token"
   echo "---" > /etc/cif/csirtg-smrt.yml
@@ -47,6 +62,11 @@ else
   /cif_venv/bin/cif-store -d --store elasticsearch --nodes ${CIF_STORE_NODES} \
     --token-create-smrt --token ${CSIRTG_SMRT_TOKEN} --token-groups everyone
   echo ""
+
+  if [ -z ${CIF_HTTPD_TOKEN} ]
+  then
+    CIF_HTTPD_TOKEN=$(openssl rand -hex 40 | cut -c 1-80)
+  fi
 
   echo ""
   echo "set httpd token in ES"
