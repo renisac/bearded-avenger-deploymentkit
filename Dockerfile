@@ -9,6 +9,11 @@ ARG CIF_RELEASE_URL=${CIF_RELEASE_URL:-https://github.com/csirtgadgets/bearded-a
 ARG GITHUB_DEPLOY_KEY_BASE64
 ARG GITHUB_DEPLOY_KEY_FILE
 
+# optional - sets alternate index
+ARG PIP_INDEX_URL
+# optional - needed if alternate index is not https
+ARG PIP_TRUSTED_HOST
+
 ARG S6_VERSION=2.2.0.3
 
 ENV LANG C.UTF-8
