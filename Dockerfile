@@ -69,7 +69,8 @@ RUN if [ ! -z "$GITHUB_DEPLOY_KEY_BASE64" ] \
 
 WORKDIR /root
 
-ADD https://keybase.io/justcontainers/key.asc /tmp/justcontainers.asc
+#ADD https://keybase.io/justcontainers/key.asc /tmp/justcontainers.asc
+COPY ./s6/justcontainers.asc /tmp/justcontainers.asc
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64-installer.sig /tmp/
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64-installer /tmp/
 
