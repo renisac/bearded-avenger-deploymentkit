@@ -2,7 +2,7 @@
 
 This is a temporary fork of the [CSIRT Gadgets bearded-avenger-deploymentkit repository](https://github.com/csirtgadgets/bearded-avenger-deploymentkit).
 
-The plan is to clean up the changes and submit PRs to the parent repositories. 
+The plan is to clean up the changes and submit PRs to the parent repositories.
 
 # Getting Started
 
@@ -82,7 +82,7 @@ The plan is to clean up the changes and submit PRs to the parent repositories.
 
   | build arg | example value | info |
   | --- | --- | --- |
-  | CIF_RELEASE_URL | git@github.com:yourorg/cifv3_code.git | ssh address for repo |
+  | CIF_RELEASE_URL | git@github.com:yourorg/cifv3_code.git | ssh address for custom, cifv3 repo. if not specified uses default  [cifv3 repo](https://github.com/csirtgadgets/bearded-avenger/) |
   | GITHUB_DEPLOY_KEY_FILE | /tmp/github_deploy_key | path for github deploy key in container |
   | GITHUB_DEPLOY_KEY_BASE64 | n/a | base64 encoded private ssh key |
 
