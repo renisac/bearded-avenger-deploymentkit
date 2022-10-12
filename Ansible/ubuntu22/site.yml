@@ -22,8 +22,14 @@
 
   pre_tasks:
 
+    - name: uncomment deb-src 
+      raw: sudo sed -i 's/# deb-src/deb-src/' /etc/apt/sources.list
+
+    - name: update apt
+      raw: sudo apt update
+
     - name: configure python
-      raw: sudo apt-get install python-minimal aptitude -y
+      raw: sudo apt-get install libxml2-dev libxslt-dev python3-dev -y
 
     - setup:
        filter: ansible_*

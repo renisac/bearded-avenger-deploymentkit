@@ -85,8 +85,9 @@
 
 - name: pull master from csirtg-smrt-v1 repo
   git:
-    repo:     https://github.com/csirtgadgets/csirtg-smrt-v1
+    repo:     https://github.com/mdavis332/csirtg-smrt-v1
     depth:    1
+    version:  "fix/update-deps"
     dest:     /tmp/csirtg-smrt
 
 - name: install csirtg-smrt requirements
@@ -104,8 +105,9 @@
 
 - name: pull master from cifsdk-py-v3 repo
   git:
-    repo:     https://github.com/csirtgadgets/cifsdk-py-v3
+    repo:     https://github.com/mdavis332/cifsdk-py-v3
     depth: 1
+    version: "fix/update-deps"
     dest:     /tmp/cifsdk-py-v3
 
 - name: install cifsdk-py-v3 requirements
@@ -144,6 +146,7 @@
     repo: "{{ cif_release_url }}"
     dest: /tmp/bearded-avenger
     #version: "{{ cif_version }}"
+    version: "fix/update-deps"
     key_file: '/tmp/github_deploy_key'
     accept_hostkey: yes
   when: github_deploy_key_file is defined and github_deploy_key_file != ""
