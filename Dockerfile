@@ -46,7 +46,7 @@ RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-
 && python3 -m pip install --upgrade \
   cryptography \
 && python3 -m pip install --upgrade \
-  'ansible<2.14' \
+  'ansible<7' \
 && mkdir -p /etc/resolvconf/resolv.conf.d
 #&& mkdir /etc/cron.d
 

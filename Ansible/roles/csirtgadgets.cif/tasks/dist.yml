@@ -1,5 +1,36 @@
 ---
 
+- name: update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 1800
+  become: yes
+
+# this next step is necessary due to an ansible bug for adding additional PPAs
+- name: install lsb-release
+  apt:
+    name: lsb-release
+  become: yes
+
+- name: add deadsnakes PPA for non-std python version
+  apt_repository:
+    repo: ppa:deadsnakes/ppa
+  become: yes
+
+- name: add non-std python version 3.9
+  apt:
+    name: python3.9
+    state: present
+  become: yes
+
+- name: add non-std python ver libs
+  apt:
+    state: latest
+    name:
+      - python3.9-dev
+      - python3.9-minimal
+      - python3.9-venv
+
 - name: create cif venv directory
   file:
     path:   "{{ cif_venv }}"
@@ -21,7 +52,7 @@
     extra_args: "--upgrade"
     virtualenv: "{{ cif_venv }}"
     #virtualenv_python: python3.6
-    virtualenv_command: /usr/bin/python3 -m venv
+    virtualenv_command: /usr/bin/python3.9 -m venv
 
 - name: install specific setuptools due to maxmind error
   pip:
@@ -76,18 +107,20 @@
 - debug:
     var: pip_output
 
-- name: install csirtg-indicator from github master branch
+- name: install csirtg-indicator from cloned repo
   pip:
-    name: git+https://github.com/csirtgadgets/csirtg-indicator-py-v1
+    name: file:///tmp/csirtg-indicator
     virtualenv: "{{ cif_venv }}"
 
 - debug: msg="csirtg-smrt install"
 
 - name: pull master from csirtg-smrt-v1 repo
   git:
-    repo:     https://github.com/mdavis332/csirtg-smrt-v1
-    depth:    1
-    version:  "fix/update-deps"
+    repo:     https://github.com/mdavis332/csirtg-smrt-v1.git
+    #depth:    1
+    single_branch: yes
+    force: yes
+    version:  3546fe36d6a27517c4046352be783ccccb31c1eb
     dest:     /tmp/csirtg-smrt
 
 - name: install csirtg-smrt requirements
@@ -96,9 +129,9 @@
     requirements: requirements.txt
     virtualenv: "{{ cif_venv }}"
 
-- name: install csirtg-smrt from repo
+- name: install csirtg-smrt from cloned repo
   pip:
-    name: git+https://github.com/csirtgadgets/csirtg-smrt-v1
+    name: file:///tmp/csirtg-smrt
     virtualenv: "{{ cif_venv }}"
 
 - debug: msg="cifsdk-py-v3 install"
@@ -106,8 +139,9 @@
 - name: pull master from cifsdk-py-v3 repo
   git:
     repo:     https://github.com/mdavis332/cifsdk-py-v3
-    depth: 1
-    version: "fix/update-deps"
+    #depth: 1
+    single_branch: yes
+    version: fix/update-deps
     dest:     /tmp/cifsdk-py-v3
 
 - name: install cifsdk-py-v3 requirements
@@ -116,9 +150,9 @@
     requirements: requirements.txt
     virtualenv: "{{ cif_venv }}"
 
-- name: install cifsdk-py-v3 from github master branch
+- name: install cifsdk-py-v3 from cloned repo
   pip:
-    name: git+https://github.com/csirtgadgets/cifsdk-py-v3
+    name: file:///tmp/cifsdk-py-v3
     virtualenv: "{{ cif_venv }}"
 
 - debug: msg="bearded-avenger install"
@@ -146,7 +180,8 @@
     repo: "{{ cif_release_url }}"
     dest: /tmp/bearded-avenger
     #version: "{{ cif_version }}"
-    version: "fix/update-deps"
+    single_branch: yes
+    version: fix/update-deps
     key_file: '/tmp/github_deploy_key'
     accept_hostkey: yes
   when: github_deploy_key_file is defined and github_deploy_key_file != ""
