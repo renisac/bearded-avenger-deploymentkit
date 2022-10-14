@@ -54,9 +54,9 @@
     #virtualenv_python: python3.6
     virtualenv_command: /usr/bin/python3.9 -m venv
 
-- name: install specific setuptools due to maxmind error
+- name: install setuptools 
   pip:
-    name: 'setuptools<46'
+    name: setuptools
     extra_args: "--upgrade"
     virtualenv: "{{ cif_venv }}"
 
@@ -81,7 +81,7 @@
 - name: install pytest
   pip:
     name: pytest
-    version: '2.9.2'
+    version: '>=4.2'
     extra_args: "--upgrade"
     virtualenv: "{{ cif_venv }}"
 
@@ -90,7 +90,6 @@
 - name: pull master from csirtg-indicator repo
   git:
     repo:     https://github.com/csirtgadgets/csirtg-indicator-py-v1
-    depth:    1
     dest:     /tmp/csirtg-indicator
   register: git_output
 
@@ -114,19 +113,16 @@
 
 - debug: msg="csirtg-smrt install"
 
-- name: pull master from csirtg-smrt-v1 repo
+- name: pull from csirtg-smrt-v1 repo
   git:
-    repo:     https://github.com/mdavis332/csirtg-smrt-v1.git
-    #depth:    1
-    single_branch: yes
-    force: yes
-    version:  3546fe36d6a27517c4046352be783ccccb31c1eb
+    repo:     https://github.com/mdavis332/csirtg-smrt-v1
+    version:  fix/update-deps
     dest:     /tmp/csirtg-smrt
 
 - name: install csirtg-smrt requirements
   pip:
     chdir: /tmp/csirtg-smrt
-    requirements: requirements.txt
+    requirements: extras_requirements.txt
     virtualenv: "{{ cif_venv }}"
 
 - name: install csirtg-smrt from cloned repo
@@ -139,8 +135,6 @@
 - name: pull master from cifsdk-py-v3 repo
   git:
     repo:     https://github.com/mdavis332/cifsdk-py-v3
-    #depth: 1
-    single_branch: yes
     version: fix/update-deps
     dest:     /tmp/cifsdk-py-v3
 
@@ -180,7 +174,6 @@
     repo: "{{ cif_release_url }}"
     dest: /tmp/bearded-avenger
     #version: "{{ cif_version }}"
-    single_branch: yes
     version: fix/update-deps
     key_file: '/tmp/github_deploy_key'
     accept_hostkey: yes
@@ -196,12 +189,16 @@
   command: pip install -r dev_requirements.txt chdir={{ cif_release_dir }}
   environment:
     PATH: "{{ cif_venv }}/bin:{{ ansible_env.PATH }}"
+  register: pip_output
+
+- debug:
+    var: pip_output
 
 - name: make cif account owner of bearded-avenger repo so sqlite3 tests work
-  local_action:
-    module: file
+  file:
     path: "{{ cif_release_dir }}"
     state: directory
+    recurse: yes
     group: cif
     owner: cif
 

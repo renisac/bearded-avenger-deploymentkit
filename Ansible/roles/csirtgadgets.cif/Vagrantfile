@@ -11,7 +11,7 @@ echo 'installing the basics'
 apt-get update && apt-get install -y python-minimal python-pip
 
 echo 'installing ansible...'
-pip install 'ansible>=2.4,<2.5'
+pip install 'ansible<7.0'
 
 echo 'running ansible...'
 cd /vagrant
