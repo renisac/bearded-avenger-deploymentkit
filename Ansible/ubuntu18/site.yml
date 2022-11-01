@@ -1,0 +1,61 @@
+# http://docs.ansible.com/ansible/playbooks_environment.html
+# environment:
+#   http_proxy: http://proxy.example.com:8080
+---
+- name: configure platform
+  hosts: localhost
+  gather_facts: False
+  become: True
+
+  vars_files:
+    - "vars/main.yml"
+    - "../global_vars.yml"
+
+  vars:
+    - GH_TOKEN: "{{ lookup('env', 'GH_TOKEN') }}"
+    - router_store_args: ''
+    - router_hunter_threads: "{{ lookup('env', 'CIF_HUNTER_THREADS') }}"
+    - router_hunter_advanced: "{{ lookup('env', 'CIF_HUNTER_ADVANCED') }}"
+    - router_gatherer_geo_fqdn: "{{ lookup('env', 'CIF_GATHERER_GEO_FQDN') }}"
+    - cif_release_url: "{{ lookup('env', 'CIF_RELEASE_URL') }}"
+    - github_deploy_key_file: "{{ lookup('env', 'GITHUB_DEPLOY_KEY_FILE') }}"
+
+  pre_tasks:
+
+    - name: configure python
+      raw: sudo apt-get install python-minimal aptitude -y
+
+    - setup:
+       filter: ansible_*
+
+    - name: set store fact
+      set_fact:
+        router_store_store: 'elasticsearch'
+        router_store_nodes: "{{ CIF_ES }}"
+      when: CIF_ES is defined and CIF_ES != ""
+
+    - name: set build_sdist
+      set_fact:
+        cif_build_sdist: CIF_ANSIBLE_SDIST
+      when: CIF_ANSIBLE_SDIST is defined
+
+    - name: set alternate smart.db path
+      set_fact:
+        smrt_db_path: "{{ CIF_SMRT_DB_PATH }}"
+      when: CIF_SMRT_DB_PATH is defined and CIF_SMRT_DB_PATH != ""
+
+    - import_tasks: tasks/main.yml
+
+  roles:
+    - { role: elastic.elasticsearch,
+        es_config: {
+          node.data: true,
+          node.master: true,
+        },
+        es_version: "5.5.1",
+        es_instance_name: 'cif',
+        #when: router_store_store is defined and router_store_store == 'elasticsearch'
+        when: router_store_store is defined and router_store_store == 'elasticsearch' and (DOCKER_BUILD is undefined or DOCKER_BUILD == 'no' or DOCKER_BUILD == "")
+      }
+    - { role: csirtgadgets.cif, tags: role-cif }
+    - { role: nginx, tags: role-nginx }

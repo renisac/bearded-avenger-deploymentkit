@@ -13,6 +13,7 @@ apt-get update && apt-get install -y python-minimal python-pip
 echo 'installing ansible...'
 pip install 'ansible<7.0'
 
+
 echo 'running ansible...'
 cd /vagrant
 
