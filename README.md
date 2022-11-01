@@ -6,9 +6,9 @@ The plan is to clean up the changes and submit PRs to the parent repositories.
 
 # Getting Started
 
-* this deployment runs on Ubuntu 18.04
-* cif and the dependencies run in a python 3.6 venv
-  * python 3.6 is the version shipped with Ubuntu 18.04
+* this deployment runs on Ubuntu 22.04
+* cif and the dependencies run in a python 3.10 venv
+  * python 3.10 is the version shipped with Ubuntu 22.04
 * this sets up the latest versions of cifv3 and dependencies
 * this repo has integrated the csirtgadgets.cif Ansible role
 
@@ -78,7 +78,6 @@ The plan is to clean up the changes and submit PRs to the parent repositories.
       cif -p
 
 * optional build args to pull from private Github repo (see overrides/docker-compose.deploy_key.yml)
-
 
   | build arg | example value | info |
   | --- | --- | --- |

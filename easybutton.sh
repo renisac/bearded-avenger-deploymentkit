@@ -50,10 +50,10 @@ fi
 
 case $OS in
     "Ubuntu" )
-        if [ "$VER" == "18.04" ]; then
-            cd ./Ansible/ubuntu18
+        if [ "$VER" == "22.04" ]; then
+            cd ./Ansible/ubuntu22
             bash bootstrap.sh
         else
-            echo "Currently only 18.04 LTS (Server) is supported"
+            echo "Currently only 22.04 LTS (Server) is supported"
         fi;;
 esac

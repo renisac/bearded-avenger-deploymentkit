@@ -1,0 +1,14 @@
+---
+- name: "Check for version 22.04"
+  fail: msg="Must be version 22.04 or higher"
+  when: ansible_distribution_version is version_compare('22.04', '<')
+
+- include_tasks: firewall.yml
+  when: DOCKER_BUILD is undefined or DOCKER_BUILD == 'no' or DOCKER_BUILD == ""
+  tags: firewall
+
+- include_tasks: deps.yml
+  tags: deps
+
+- include_tasks: unattended_updates.yml
+  tags: deps
