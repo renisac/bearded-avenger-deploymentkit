@@ -63,8 +63,8 @@ RUN ansible-galaxy install elastic.elasticsearch,5.5.1
 # Single step so that deploy key is not committed to image
 RUN if [ ! -z "$GITHUB_DEPLOY_KEY_BASE64" ] \
     ; then echo "$GITHUB_DEPLOY_KEY_BASE64" | base64 -d > "$GITHUB_DEPLOY_KEY_FILE" \
+    && chmod 0600 "$GITHUB_DEPLOY_KEY_FILE" \
   ; fi \
-  && chmod 0600 "$GITHUB_DEPLOY_KEY_FILE" \
   && ansible-playbook -i "localhost," -c local site.yml -vv \
   && if [ -f "$GITHUB_DEPLOY_KEY_FILE" ] ; then rm -fv "$GITHUB_DEPLOY_KEY_FILE" ; fi
 

@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  router:
+    build:
+      context: .
+    image: router
