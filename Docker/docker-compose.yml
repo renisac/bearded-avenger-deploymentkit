@@ -6,41 +6,44 @@ services:
     build:
       context: ./router
     image: cif-router
-    #depends_on:
-    #  - elasticsearch
+    depends_on:
+      - es01
     volumes:
+      - ./:/shared:rw
     environment:
       CIF_TOKEN: 'foo'
       CIF_HUNTER_TOKEN: 'bar'
       CSIRTG_SMRT_TOKEN: 'baz'
-      CIF_HTTPD_TOKEN: 'boo'
-      #CIF_STORE_STORE: 'elasticsearch'
-      #CIF_STORE_NODES: 'elasticsearch:9200'
-      #CIF_STORE_ES_UPSERT_MODE: 1
+      CIF_HTTPD_TOKEN: 'qux'
+      CIF_STORE_STORE: 'es01'
+      CIF_STORE_NODES: 'es01:9200'
       #CIF_HTTPD_LISTEN: '0.0.0.0'
-      #SERVICE_STOP_SMRT: 1
-      #DOCKER_HTTPS: 1
 
-  #elasticsearch:
-  #  image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
-  #  container_name: elasticsearch_mini
-  #  environment:
-  #    - cluster.name=docker-cluster
-  #    - bootstrap.memory_lock=true
-  #    - xpack.security.enabled=false
-  #    - xpack.monitoring.enabled=false
-  #    - xpack.ml.enabled=false
-  #    - xpack.graph.enabled=false
-  #    - xpack.watcher.enabled=false
-  #    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #  healthcheck:
-  #      test: ["CMD", "curl", "-f", "http://localhost:9200"]
-  #      interval: 30s
-  #      timeout: 10s
-  #      retries: 5
-  #  ulimits:
-  #    memlock:
-  #      soft: -1
-  #      hard: -1
-  #  #ports:
-  #  #  - 127.0.0.1:9200:9200
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+    container_name: es01
+    #volumes:
+    #  - esdata:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.ml.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9200"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    #ports:
+    #  - 127.0.0.1:9200:9200
+
+#volumes:
+#  esdata:

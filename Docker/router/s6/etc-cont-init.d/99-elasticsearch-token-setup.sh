@@ -8,6 +8,9 @@ then
   exit 0
 fi
 
+# stop cif-store config file read errors
+touch /etc/cif/cif-router.yml
+
 until curl --silent --fail "http://${CIF_STORE_NODES}/_cluster/health?wait_for_status=yellow&timeout=180s"; do
   echo "Waiting for ${CIF_STORE_NODES} to be up"
   sleep 5
@@ -35,6 +38,8 @@ else
   echo "set admin token"
   echo "---" > /home/cif/.cif.yml
   echo "token: ${CIF_TOKEN}" >> /home/cif/.cif.yml
+  chown cif:cif /home/cif/.cif.yml
+  chmod 0640 /home/cif/.cif.yml
   /cif_venv/bin/cif-store -d --store elasticsearch --nodes ${CIF_STORE_NODES} \
     --token-create-admin --token ${CIF_TOKEN} --token-groups everyone
 
@@ -47,6 +52,8 @@ else
   echo "set hunter token"
   echo "---" > /etc/cif/cif-router.yml
   echo "hunter_token: ${CIF_HUNTER_TOKEN}" >> /etc/cif/cif-router.yml
+  chown cif:cif /etc/cif/cif-router.yml
+  chmod 0640 /etc/cif/cif-router.yml
   /cif_venv/bin/cif-store -d --store elasticsearch --nodes ${CIF_STORE_NODES} \
     --token-create-hunter --token ${CIF_HUNTER_TOKEN} --token-groups everyone
 
@@ -55,13 +62,15 @@ else
     CSIRTG_SMRT_TOKEN=$(openssl rand -hex 40 | cut -c 1-80)
   fi
 
-#  echo ""
-#  echo "set smrt token"
+  echo ""
+  echo "set smrt token in ES"
 #  echo "---" > /etc/cif/csirtg-smrt.yml
 #  echo "token: ${CSIRTG_SMRT_TOKEN}" >> /etc/cif/csirtg-smrt.yml
-#  /cif_venv/bin/cif-store -d --store elasticsearch --nodes ${CIF_STORE_NODES} \
-#    --token-create-smrt --token ${CSIRTG_SMRT_TOKEN} --token-groups everyone
-#  echo ""
+#  chown cif:cif /etc/cif/csirtg-smrt.yml
+#  chmod 0640 /etc/cif/csirtg-smrt.yml
+  /cif_venv/bin/cif-store -d --store elasticsearch --nodes ${CIF_STORE_NODES} \
+    --token-create-smrt --token ${CSIRTG_SMRT_TOKEN} --token-groups everyone
+  echo ""
 
   if [ -z ${CIF_HTTPD_TOKEN} ]
   then

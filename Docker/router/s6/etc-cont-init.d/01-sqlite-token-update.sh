@@ -30,6 +30,8 @@ then
   echo "set admin token"
   echo "---" > /home/cif/.cif.yml
   echo "token: ${CIF_TOKEN}" >> /home/cif/.cif.yml
+  chown cif:cif /home/cif/cif.yml
+  chmod 0640 /home/cif/cif.yml
   sqlite3 /var/lib/cif/cif.db "UPDATE tokens SET token = \"${CIF_TOKEN}\" WHERE username = 'admin';" ".exit"
 fi
 
@@ -39,6 +41,9 @@ then
   echo "set hunter token"
   echo "---" > /etc/cif/cif-router.yml
   echo "hunter_token: ${CIF_HUNTER_TOKEN}" >> /etc/cif/cif-router.yml
+  echo "" >> /etc/cif/cif-router.yml
+  chown cif:cif /etc/cif/cif-router.yml
+  chmod 0640 /etc/cif/cif-router.yml
   sqlite3 /var/lib/cif/cif.db "UPDATE tokens SET token = \"${CIF_HUNTER_TOKEN}\" WHERE username = 'hunter';" ".exit"
 fi
 
@@ -48,6 +53,8 @@ then
   echo "set smrt token"
   echo "---" > /etc/cif/csirtg-smrt.yml
   echo "token: ${CSIRTG_SMRT_TOKEN}" >> /etc/cif/csirtg-smrt.yml
+  chown cif:cif /etc/cif/csirtg-smrt.yml
+  chmod 0640 /etc/cif/csirtg-smrt.yml
   sqlite3 /var/lib/cif/cif.db "UPDATE tokens SET token = \"${CSIRTG_SMRT_TOKEN}\" WHERE username = 'csirtg-smrt';" ".exit"
 fi
 
