@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+
+  cif-python:
+    build:
+      context: ./cif-python
+    image: cif-python
+
+  cif-base:
+    build:
+      context: ./cif-base
+    image: cif-base
