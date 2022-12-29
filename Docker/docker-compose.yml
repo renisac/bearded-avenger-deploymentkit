@@ -15,9 +15,21 @@ services:
       CIF_HUNTER_TOKEN: 'bar'
       CSIRTG_SMRT_TOKEN: 'baz'
       CIF_HTTPD_TOKEN: 'qux'
-      CIF_STORE_STORE: 'es01'
+      CIF_HTTPD_LISTEN: '0.0.0.0'
+      CIF_STORE_STORE: 'elasticsearch'
       CIF_STORE_NODES: 'es01:9200'
-      #CIF_HTTPD_LISTEN: '0.0.0.0'
+    ports:
+      - 5000:5000
+
+  cif-smrt:
+    build:
+      context: ./smrt
+    image: smrt
+    volumes:
+      - ./:/shared:rw
+    environment:
+      CIF_TOKEN: 'foo'
+      CSIRTG_SMRT_TOKEN: 'baz'
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
@@ -42,8 +54,8 @@ services:
       memlock:
         soft: -1
         hard: -1
-    #ports:
-    #  - 127.0.0.1:9200:9200
+    ports:
+      - 9200:9200
 
 #volumes:
 #  esdata:
