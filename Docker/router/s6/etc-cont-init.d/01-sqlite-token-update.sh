@@ -30,8 +30,8 @@ then
   echo "set admin token"
   echo "---" > /home/cif/.cif.yml
   echo "token: ${CIF_TOKEN}" >> /home/cif/.cif.yml
-  chown cif:cif /home/cif/cif.yml
-  chmod 0640 /home/cif/cif.yml
+  chown cif:cif /home/cif/.cif.yml
+  chmod 0640 /home/cif/.cif.yml
   sqlite3 /var/lib/cif/cif.db "UPDATE tokens SET token = \"${CIF_TOKEN}\" WHERE username = 'admin';" ".exit"
 fi
 
