@@ -38,5 +38,5 @@ chown cif:cif /var/lib/smrt
   --service \
   --client cif \
   --fireball \
-  --delay 5 \
+  --delay 1 \
   --config /etc/cif/csirtg-smrt.yml

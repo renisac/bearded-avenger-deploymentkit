@@ -12,11 +12,11 @@ else
 fi
 
 #-------------------------------
-# router
-export CIF_GATHERER_THREADS="2"
-export CIF_HUNTER_ADVANCED=""
+# router{
+#export CIF_GATHERER_THREADS="${CIF_GATHERER_THREADS:-2}"
+export CIF_HUNTER_THREADS="${CIF_HUNTER_THREADS:-0}"
+export CIF_HUNTER_ADVANCED="${CIF_HUNTER_ADVANCED:-0}"
 export CIF_HUNTER_EXCLUDE="osint.bambenekconsulting.com:dga"
-export CIF_HUNTER_THREADS=""
 export CIF_ROUTER_CONFIG_PATH="/etc/cif/cif-router.yml"
 
 #-------------------------------

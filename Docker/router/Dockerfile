@@ -96,4 +96,6 @@ RUN chmod 0750 /etc/cont-init.d/*.sh \
 \
 && chown -R root:cif /etc/s6-overlay/s6-rc.d/
 
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=30000
+
 ENTRYPOINT ["/init"]
