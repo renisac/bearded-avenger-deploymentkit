@@ -31,7 +31,7 @@ services:
     image: smrt
     volumes:
       - ./:/shared:rw
-      - ~/smrt_cache:/var/lib/smrt:rw
+      - ./smrt_cache:/var/lib/smrt:rw
     environment:
       CIF_TOKEN: 'foo'
       CSIRTG_SMRT_TOKEN: 'baz'

@@ -39,8 +39,8 @@ docker run \
 cd Docker
 docker-compose -f docker-compose.build.yml build cif-python
 docker-compose -f docker-compose.build.yml build cif-base
-docker-compose pull
-docker-compose build
+docker-compose pull es01
+docker-compose build cif-router cif-smrt
 ```
 
 ## Running
