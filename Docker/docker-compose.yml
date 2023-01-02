@@ -10,7 +10,7 @@ services:
       - es01
     volumes:
       - ./:/shared:rw
-      - ~/geo_dbs:/usr/share/GeoIP:ro
+      - ./geoip_dbs:/usr/share/GeoIP:ro
     environment:
       CIF_TOKEN: 'foo'
       CIF_HUNTER_TOKEN: 'bar'
@@ -19,10 +19,11 @@ services:
       CIF_HTTPD_LISTEN: '0.0.0.0'
       CIF_STORE_STORE: 'elasticsearch'
       CIF_STORE_NODES: 'es01:9200'
+      CIF_GATHERER_THREADS: 2
       CIF_HUNTER_THREADS: 2
       CIF_HUNTER_ADVANCED: 1
     ports:
-      - 5000:5000
+      - 127.0.0.1:5000:5000
 
   cif-smrt:
     build:
@@ -59,7 +60,7 @@ services:
         soft: -1
         hard: -1
     ports:
-      - 9200:9200
+      - 127.0.0.1:9200:9200
 
 volumes:
   esdata:

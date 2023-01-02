@@ -1,7 +1,9 @@
 #!/bin/sh
 
+BA_DIR=/srv/docker/bearded-avenger-deploymentkit
+
 docker run \
   --rm \
   --env-file ./secrets/geoipupdate_env \
-  -v /srv/docker/RIDEV/bearded-avenger-deploymentkit/Docker/geo_dbs:/usr/share/GeoIP \
+  -v ${BA_DIR}/Docker/geo_dbs:/usr/share/GeoIP \
   maxmindinc/geoipupdate
