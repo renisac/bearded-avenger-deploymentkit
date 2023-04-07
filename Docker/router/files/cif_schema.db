@@ -1,50 +1,50 @@
 CREATE TABLE tokens (
-	id INTEGER NOT NULL, 
-	username TEXT, 
-	token VARCHAR, 
-	expires DATETIME, 
-	read BOOLEAN, 
-	write BOOLEAN, 
-	revoked BOOLEAN, 
-	acl TEXT, 
-	admin BOOLEAN, 
-	last_activity_at DATETIME, 
+	id INTEGER NOT NULL,
+	username TEXT,
+	token VARCHAR,
+	expires DATETIME,
+	read BOOLEAN,
+	write BOOLEAN,
+	revoked BOOLEAN,
+	acl TEXT,
+	admin BOOLEAN,
+	last_activity_at DATETIME,
 	PRIMARY KEY (id)
 );
 CREATE TABLE groups (
-	id INTEGER NOT NULL, 
-	"group" TEXT, 
-	token_id INTEGER, 
-	PRIMARY KEY (id), 
+	id INTEGER NOT NULL,
+	"group" TEXT,
+	token_id INTEGER,
+	PRIMARY KEY (id),
 	FOREIGN KEY(token_id) REFERENCES tokens (id) ON DELETE CASCADE
 );
 CREATE INDEX ix_groups_group ON groups ("group");
 CREATE TABLE indicators (
-	id INTEGER NOT NULL, 
-	indicator TEXT, 
-	"group" VARCHAR, 
-	itype VARCHAR, 
-	tlp VARCHAR, 
-	provider VARCHAR, 
-	portlist VARCHAR, 
-	asn_desc TEXT, 
-	asn FLOAT, 
-	cc VARCHAR, 
-	protocol INTEGER, 
-	reporttime DATETIME, 
-	firsttime DATETIME, 
-	lasttime DATETIME, 
-	confidence FLOAT, 
-	timezone VARCHAR, 
-	city VARCHAR, 
-	longitude VARCHAR, 
-	latitude VARCHAR, 
-	peers TEXT, 
-	description TEXT, 
-	additional_data TEXT, 
-	rdata TEXT, 
-	count INTEGER, 
-	region VARCHAR, 
+	id INTEGER NOT NULL,
+	indicator TEXT,
+	"group" VARCHAR,
+	itype VARCHAR,
+	tlp VARCHAR,
+	provider VARCHAR,
+	portlist VARCHAR,
+	asn_desc TEXT,
+	asn FLOAT,
+	cc VARCHAR,
+	protocol INTEGER,
+	reporttime DATETIME,
+	firsttime DATETIME,
+	lasttime DATETIME,
+	confidence FLOAT,
+	timezone VARCHAR,
+	city VARCHAR,
+	longitude VARCHAR,
+	latitude VARCHAR,
+	peers TEXT,
+	description TEXT,
+	additional_data TEXT,
+	rdata TEXT,
+	count INTEGER,
+	region VARCHAR,
 	PRIMARY KEY (id)
 );
 CREATE INDEX ix_indicators_asn_desc ON indicators (asn_desc);
@@ -58,60 +58,60 @@ CREATE INDEX ix_indicators_region ON indicators (region);
 CREATE INDEX ix_indicators_itype ON indicators (itype);
 CREATE INDEX ix_indicators_provider ON indicators (provider);
 CREATE TABLE indicators_ipv4 (
-	id INTEGER NOT NULL, 
-	ipv4 IP, 
-	mask INTEGER, 
-	indicator_id INTEGER, 
-	PRIMARY KEY (id), 
+	id INTEGER NOT NULL,
+	ipv4 IP,
+	mask INTEGER,
+	indicator_id INTEGER,
+	PRIMARY KEY (id),
 	FOREIGN KEY(indicator_id) REFERENCES indicators (id) ON DELETE CASCADE
 );
 CREATE INDEX ix_indicators_ipv4_ipv4 ON indicators_ipv4 (ipv4);
 CREATE TABLE indicators_ipv6 (
-	id INTEGER NOT NULL, 
-	ip IP, 
-	mask INTEGER, 
-	indicator_id INTEGER, 
-	PRIMARY KEY (id), 
+	id INTEGER NOT NULL,
+	ip IP,
+	mask INTEGER,
+	indicator_id INTEGER,
+	PRIMARY KEY (id),
 	FOREIGN KEY(indicator_id) REFERENCES indicators (id) ON DELETE CASCADE
 );
 CREATE INDEX ix_indicators_ipv6_ip ON indicators_ipv6 (ip);
 CREATE TABLE indicators_fqdn (
-	id INTEGER NOT NULL, 
-	fqdn TEXT, 
-	indicator_id INTEGER, 
-	PRIMARY KEY (id), 
+	id INTEGER NOT NULL,
+	fqdn TEXT,
+	indicator_id INTEGER,
+	PRIMARY KEY (id),
 	FOREIGN KEY(indicator_id) REFERENCES indicators (id) ON DELETE CASCADE
 );
 CREATE INDEX ix_indicators_fqdn_fqdn ON indicators_fqdn (fqdn);
 CREATE TABLE indicators_url (
-	id INTEGER NOT NULL, 
-	url TEXT, 
-	indicator_id INTEGER, 
-	PRIMARY KEY (id), 
+	id INTEGER NOT NULL,
+	url TEXT,
+	indicator_id INTEGER,
+	PRIMARY KEY (id),
 	FOREIGN KEY(indicator_id) REFERENCES indicators (id) ON DELETE CASCADE
 );
 CREATE INDEX ix_indicators_url_url ON indicators_url (url);
 CREATE TABLE indicators_hash (
-	id INTEGER NOT NULL, 
-	hash VARCHAR, 
-	indicator_id INTEGER, 
-	PRIMARY KEY (id), 
+	id INTEGER NOT NULL,
+	hash VARCHAR,
+	indicator_id INTEGER,
+	PRIMARY KEY (id),
 	FOREIGN KEY(indicator_id) REFERENCES indicators (id) ON DELETE CASCADE
 );
 CREATE INDEX ix_indicators_hash_hash ON indicators_hash (hash);
 CREATE TABLE tags (
-	id INTEGER NOT NULL, 
-	tag VARCHAR, 
-	indicator_id INTEGER, 
-	PRIMARY KEY (id), 
+	id INTEGER NOT NULL,
+	tag VARCHAR,
+	indicator_id INTEGER,
+	PRIMARY KEY (id),
 	FOREIGN KEY(indicator_id) REFERENCES indicators (id) ON DELETE CASCADE
 );
 CREATE INDEX ix_tags_tag ON tags (tag);
 CREATE INDEX ix_tags_indicator ON tags (tag, indicator_id);
 CREATE TABLE messages (
-	id INTEGER NOT NULL, 
-	message TEXT, 
-	indicator_id INTEGER, 
-	PRIMARY KEY (id), 
+	id INTEGER NOT NULL,
+	message TEXT,
+	indicator_id INTEGER,
+	PRIMARY KEY (id),
 	FOREIGN KEY(indicator_id) REFERENCES indicators (id) ON DELETE CASCADE
 );
