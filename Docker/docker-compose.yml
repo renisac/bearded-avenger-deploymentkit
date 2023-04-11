@@ -1,5 +1,10 @@
 version: "3"
 
+volumes:
+  esdata1:
+  esdata2:
+  esdata3:
+
 services:
 
   cif-router:
@@ -10,7 +15,7 @@ services:
       - es01
     volumes:
       - ./:/shared:rw
-      - ./geoip_dbs:/usr/share/GeoIP:ro
+      - ./scraps/geoip_dbs:/usr/share/GeoIP:ro
     environment:
       CIF_TOKEN: 'foo'
       CIF_HUNTER_TOKEN: 'bar'
@@ -18,7 +23,7 @@ services:
       CIF_HTTPD_TOKEN: 'qux'
       CIF_HTTPD_LISTEN: '0.0.0.0'
       CIF_STORE_STORE: 'elasticsearch'
-      CIF_STORE_NODES: 'es01:9200'
+      CIF_STORE_NODES: 'proxy-es:9200'
       CIF_GATHERER_THREADS: 2
       CIF_HUNTER_THREADS: 2
       CIF_HUNTER_ADVANCED: 1
@@ -31,18 +36,27 @@ services:
     image: smrt
     volumes:
       - ./:/shared:rw
-      - ./smrt_cache:/var/lib/smrt:rw
+      - ./scraps/smrt_cache:/var/lib/smrt:rw
     environment:
       CIF_TOKEN: 'foo'
       CSIRTG_SMRT_TOKEN: 'baz'
+
+  proxy-es:
+    image: haproxy:lts
+    container_name: proxy-es
+    volumes:
+      - ./haproxy/proxy-es.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
     container_name: es01
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - esdata1:/usr/share/elasticsearch/data
     environment:
       - cluster.name=docker-cluster
+      - node.name=es01
+      - discovery.zen.ping.unicast.hosts=es02,es03
+      - discovery.zen.minimum_master_nodes=2
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=false
@@ -59,8 +73,57 @@ services:
       memlock:
         soft: -1
         hard: -1
-    ports:
-      - 127.0.0.1:9200:9200
 
-volumes:
-  esdata:
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+    container_name: es02
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=docker-cluster
+      - node.name=es02
+      - discovery.zen.ping.unicast.hosts=es01,es03
+      - discovery.zen.minimum_master_nodes=2
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.ml.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9200"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+    container_name: es03
+    volumes:
+      - esdata3:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=docker-cluster
+      - node.name=es03
+      - discovery.zen.ping.unicast.hosts=es01,es02
+      - discovery.zen.minimum_master_nodes=2
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.ml.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9200"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
