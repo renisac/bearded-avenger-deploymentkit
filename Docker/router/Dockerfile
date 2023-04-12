@@ -42,20 +42,23 @@ RUN \
 # hadolint ignore=DL3007
 FROM cif-python:latest
 
-COPY --from=builder /cif_venv /cif_venv
-
-RUN echo "cif             soft    nofile            20000" \
-  >> /etc/security/limits.conf \
-&& echo "cif             hard    nofile            30000" \
-  >> /etc/security/limits.conf
-
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=30000
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG VIRTUAL_ENV="/cif_venv"
 ARG PATH="$VIRTUAL_ENV/bin:$PATH"
 
+COPY --from=builder /cif_venv /cif_venv
+COPY --from=s6 /tmp/s6-overlay-noarch.tar.xz /tmp/
+COPY --from=s6 /tmp/s6-overlay-x86_64.tar.xz /tmp/
+COPY files/cif_schema.db /tmp/
+
 # hadolint ignore=DL3009,DL3013,SC2016
 RUN set -e; set -x \
-; apt-get update \
+&& echo "cif             soft    nofile            20000" \
+  >> /etc/security/limits.conf \
+&& echo "cif             hard    nofile            30000" \
+  >> /etc/security/limits.conf \
+&& apt-get update \
 && apt-get --no-install-recommends install -y \
   curl \
   libgeoip-dev \
@@ -72,13 +75,8 @@ RUN set -e; set -x \
 && chmod 750 /cif_venv \
 && mkdir /etc/cif \
 && echo "VIRTUAL_ENV=${VIRTUAL_ENV}" > /home/cif/.bash_aliases \
-&& echo 'PATH="${VIRTUAL_ENV}/bin:${PATH}"' >> /home/cif/.bash_aliases
-
-COPY files/cif_schema.db /tmp/
-
-COPY --from=s6 /tmp/s6-overlay-noarch.tar.xz /tmp/
-COPY --from=s6 /tmp/s6-overlay-x86_64.tar.xz /tmp/
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
+&& echo 'PATH="${VIRTUAL_ENV}/bin:${PATH}"' >> /home/cif/.bash_aliases \
+&& tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
 && tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
 
 COPY ./s6/etc-cont-init.d/ /etc/cont-init.d/
@@ -95,7 +93,5 @@ RUN chmod 0750 /etc/cont-init.d/*.sh \
 && chmod 0440 /etc/s6-overlay/s6-rc.d/user/contents.d/* \
 \
 && chown -R root:cif /etc/s6-overlay/s6-rc.d/
-
-ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=30000
 
 ENTRYPOINT ["/init"]
