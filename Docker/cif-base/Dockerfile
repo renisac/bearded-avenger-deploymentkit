@@ -7,12 +7,27 @@ RUN set -e; set -x \
 ; apt-get update \
 && apt-get --no-install-recommends install -y \
   ca-certificates \
-  git
+  git \
+  openssh-client
+
+ARG CIF_RELEASE_URL=${CIF_RELEASE_URL:-https://github.com/csirtgadgets/bearded-avenger}
+ARG GITHUB_DEPLOY_KEY_BASE64
+ARG GITHUB_DEPLOY_KEY_FILE=/tmp/github_deploy_key
 
 RUN git clone https://github.com/csirtgadgets/csirtg-indicator-py-v1 /tmp/csirtg-indicator \
 && git clone https://github.com/csirtgadgets/csirtg-smrt-v1 /tmp/csirtg-smrt \
-&& git clone https://github.com/csirtgadgets/cifsdk-py-v3 /tmp/cifsdk-py-v3
-#&& git clone https://github.com/csirtgadgets/bearded-avenger /tmp/bearded-avenger
+&& git clone https://github.com/csirtgadgets/cifsdk-py-v3 /tmp/cifsdk-py-v3 \
+\
+&& if [ ! -z "${GITHUB_DEPLOY_KEY_BASE64}" ] \
+    ; then echo "${GITHUB_DEPLOY_KEY_BASE64}" | base64 -d > "${GITHUB_DEPLOY_KEY_FILE}" \
+    && chmod 0600 "${GITHUB_DEPLOY_KEY_FILE}" \
+    && mkdir -p ~/.ssh \
+    && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts \
+    && eval "$(ssh-agent)" \
+    && ssh-add "${GITHUB_DEPLOY_KEY_FILE}" \
+  ; fi \
+&& git clone "${CIF_RELEASE_URL}" /tmp/bearded-avenger \
+&& if [ -f "$GITHUB_DEPLOY_KEY_FILE" ] ; then rm -fv "$GITHUB_DEPLOY_KEY_FILE" ; fi
 
 ################
 # hadolint ignore=DL3007
@@ -55,7 +70,7 @@ WORKDIR /tmp/cifsdk-py-v3
 RUN python3.9 -m pip install --no-cache-dir -r requirements.txt \
 && python3.9 -m pip install --no-cache-dir .
 
-COPY repos/sesv4_code /tmp/bearded-avenger
+COPY --from=git-repos /tmp/bearded-avenger /tmp/bearded-avenger
 WORKDIR /tmp/bearded-avenger
 RUN python3.9 -m pip install --no-cache-dir -r dev_requirements.txt \
 && python3.9 setup.py test \

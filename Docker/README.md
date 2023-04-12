@@ -18,9 +18,8 @@ GEOIPUPDATE_EDITION_IDS=GeoLite2-ASN GeoLite2-City
 ```
 
 * pull GeoIP docker image
-
 ```
-docker pull maxmindinc/geoipupdate
+docker pull ghcr.io/maxmind/geoipupdate
 ```
 
 * download geoip dbs. change path before running
@@ -28,13 +27,15 @@ docker pull maxmindinc/geoipupdate
 docker run \
   --rm \
   --env-file ./secrets/geoipupdate_env \
-  -v ~/bearded-avenger-deploymentkit/Docker/geoip_dbs:/usr/share/GeoIP \
-  maxmindinc/geoipupdate
+  -v ./scraps/geoip_dbs:/usr/share/GeoIP \
+  ghcr.io/maxmind/geoipupdate
 ```
+
 ### Build images
 
 * copy sesv4_code repo into Docker/cif-base/repos/
 * build python image, build cif base, pull elastic, build smrt and router images
+
 ```
 cd Docker
 docker-compose -f docker-compose.build.yml build cif-python

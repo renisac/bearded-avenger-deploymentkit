@@ -6,7 +6,7 @@ FROM cif-base:latest as builder
 # s6 builder
 #
 # install s6 to image
-# COPY --from=s6 /tmp/s6-overlay-noaarch.tar.xz /tmp/
+# COPY --from=s6 /tmp/s6-overlay-noarch.tar.xz /tmp/
 # COPY --from=s6 /tmp/s6-overlay-x86_64.tar.xz /tmp/
 # RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
 # && tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
