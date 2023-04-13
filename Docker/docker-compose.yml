@@ -1,0 +1,54 @@
+version: "3"
+
+volumes:
+  esdata:
+
+services:
+  cif:
+    build:
+      context: ./single-node
+    image: cif
+    volumes:
+      #- ./:/shared:rw
+      - ./scraps/smrt_cache:/var/lib/smrt:rw
+      - ./scraps/geoip_dbs:/usr/share/GeoIP:ro
+    environment:
+      CIF_TOKEN: 'foo'
+      CIF_HUNTER_TOKEN: 'bar'
+      CSIRTG_SMRT_TOKEN: 'baz'
+      CIF_HTTPD_TOKEN: 'qux'
+      CIF_HTTPD_LISTEN: '0.0.0.0'
+      CIF_STORE_STORE: 'elasticsearch'
+      CIF_STORE_NODES: 'es01:9200'
+      CIF_GATHERER_THREADS: 2
+      CIF_HUNTER_THREADS: 2
+      CIF_HUNTER_ADVANCED: 1
+      #SERVICE_STOP_SMRT: 1
+    ports:
+      - 0.0.0.0:5000:5000
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+    container_name: es01
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.ml.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9200"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 0.0.0.0:9200:9200

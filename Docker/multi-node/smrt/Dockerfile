@@ -1,6 +1,6 @@
 #----------------------------------------------------
 # hadolint ignore=DL3007
-FROM cif-base:latest as builder
+FROM cif-build:latest as builder
 
 #----------------------------------------------------
 # s6 builder
@@ -72,6 +72,7 @@ RUN set -e; set -x \
 && tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
 && tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
 
+# Finish s6 setup
 COPY ./s6/etc-cont-init.d/ /etc/cont-init.d/
 COPY ./s6/etc-s6-overlay-s6-rc.d/ /etc/s6-overlay/s6-rc.d/
 

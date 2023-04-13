@@ -1,0 +1,105 @@
+#!/command/with-contenv sh
+
+#-------------------------------
+# storage
+if [ ! -z ${CIF_STORE_STORE} ]
+then
+  export CIF_STORE_STORE="${CIF_STORE_STORE}"
+  export CIF_STORE_NODES="${CIF_STORE_NODES}"
+  export CIF_STORE_ES_UPSERT_MODE=1
+else
+  export CIF_STORE_STORE='sqlite'
+fi
+
+#-------------------------------
+# router{
+export CIF_GATHERER_THREADS="${CIF_GATHERER_THREADS:-2}"
+export CIF_HUNTER_THREADS="${CIF_HUNTER_THREADS:-0}"
+export CIF_HUNTER_ADVANCED="${CIF_HUNTER_ADVANCED:-0}"
+export CIF_HUNTER_EXCLUDE="osint.bambenekconsulting.com:dga"
+export CIF_ROUTER_CONFIG_PATH="/etc/cif/cif-router.yml"
+
+#-------------------------------
+# general
+export CIF_RUNTIME_PATH="/home/cif/run/"
+export CIF_DATA_PATH="/var/lib/cif"
+
+#-------------------------------
+# extra vars
+export PATH="/cif_venv/bin:${PATH}"
+export HOME="/home/cif"
+cd ${HOME}
+
+/command/s6-setuidgid cif cif-router --config=/etc/cif/cif-router.yml
+
+#-------------------------------
+# available env vars
+
+# all
+#export CIF_LOGLEVEL=DEBUG
+
+# generic store
+#export CIF_STORE_TRACE=0
+
+# sqlite store
+#export CIF_STORE_SQLITE_TRACE=0
+#export CIF_STORE_SQLITE_SYNC
+#export CIF_STORE_SQLITE_AUTOFLUSH
+#export CIF_STORE_SQLITE_CACHE_SIZE
+
+# es store
+#export CIF_ELASTICCSEARCH_TEST
+#export CIF_ES_LIMIT
+#export CIF_ES_LIMIT_HARD
+#export CIF_ES_LOCK_FORCE
+#export CIF_ES_LOCK_RETRIES
+#export CIF_ES_REQ_TIMEOUT
+#export CIF_ES_TIMEOUT
+#export CIF_ES_WINDOW_LIMIT
+#export CIF_STORE_ES_HTTP_TRACE
+#export CIF_STORE_ES_SHARDS_PER_INDEX
+#export CIF_STORE_ES_TRACE=0
+#export CIF_STORE_ES_UPSERT_TRACE=1
+#export CIF_STORE_ES_PARTITION
+#export CIF_STORE_ES_DELETE_FILTERS
+#export CIF_STORE_ES_UPSERT_MATCH
+#export CIF_ES_NODES
+
+# router
+#export CIF_AUTHFAIL_PROVIDER
+#export CIF_AUTH_CIFSTORE_TRACE
+#export CIF_AUTH_PROVIDER
+#export CIF_AUTH_REQUIRED
+#export CIF_AUTH_TRACE
+#export CIF_BACKEND_TIMEOUT
+#export CIF_CTRL_ADDR
+#export CIF_FEEDS_LIMIT
+#export CIF_FEEDS_WHITELIST_LIMIT
+#export CIF_FRONTEND_TIMEOUT
+#export CIF_GATHERERS_JA3_ENABLED
+#export CIF_GATHERERS_PEERS_ENABLED
+#export CIF_GATHERER_ADDR
+#export CIF_GATHERER_ASN_FAST
+#export CIF_GATHERER_GEO_FQDN
+#export CIF_GATHERER_SINK_ADDR
+#export CIF_GATHERER_TRACE=0
+#export CIF_GEO_ASN_PATH
+#export CIF_GEO_PATH
+#export CIF_HTTPD_FEED_WHITELIST_CONFIDENCE
+#export CIF_HUNTER_ADDR
+#export CIF_HUNTER_EXCLUDE
+#export CIF_HUNTER_RECURSION
+#export CIF_HUNTER_RESOLVER_TIMEOUT
+#export CIF_HUNTER_SINK_ADDR
+#export CIF_HUNTER_TRACE=0
+#export CIF_ROUTER_ADDR
+#export CIF_ROUTER_PIDFILE
+#export CIF_ROUTER_TRACE=0
+#export CIF_STORE_ADDR
+#export CIF_STORE_QUEUE_FLUSH
+#export CIF_STORE_QUEUE_LIMIT
+#export CIF_STORE_QUEUE_MAX
+#export CIF_STORE_TIMEOUT
+#export CIF_STRICT_PROVIDERS
+#export CIF_STRICT_PROVIDERS_EXCEPTIONS
+#export CIF_TOKEN_TRACE=0

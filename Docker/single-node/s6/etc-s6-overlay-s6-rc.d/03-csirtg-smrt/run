@@ -1,0 +1,45 @@
+#!/command/with-contenv sh
+
+if [ -n "${SERVICE_STOP_SMRT}" ]
+then
+  while true; do sleep 1; done
+fi
+
+if [ -z "${CSIRTG_LOGLEVEL}" ]
+then
+  export CSIRTG_LOGLEVEL=INFO
+else
+  export CSIRTG_LOGLEVEL="${CSIRTG_LOGLEVEL}"
+fi
+
+export CSIRTG_SMRT_RUNTIME_PATH=/var/run/smrt
+export CSIRTG_SMRT_RULES_PATH=/etc/cif/rules/default
+export CSIRTG_SMRT_CACHE_PATH=/var/lib/smrt
+export CSIRTG_SMRT_FIREBALL_SIZE=500
+export CSIRTG_SMRT_GOBACK_DAYS=3
+#export CIF_ROUTER_ADDR
+#export CIF_REMOTE="http://localhost:5000"
+#export CSIRTG_REMOTE_ADDR="http://localhost:5000"
+#export CSIRTG_SMRT_CIF_REMOTE="http://localhost:5000"
+#
+#export CIF_REMOTE="http://cif-router:5000"
+#export CSIRTG_REMOTE_ADDR="http://cif-router:5000"
+#export CSIRTG_SMRT_CIF_REMOTE="http://cif-router:5000"
+
+export PATH="/cif_venv/bin:${PATH}"
+export HOME="/home/cif"
+cd ${HOME}
+
+mkdir -p /var/run/smrt
+mkdir -p /var/lib/smrt
+chown cif:cif /var/run/smrt
+chown cif:cif /var/lib/smrt
+
+/command/s6-setuidgid cif csirtg-smrt \
+  --no-verify-ssl \
+  --remember \
+  --service \
+  --client cif \
+  --fireball \
+  --delay 1 \
+  --config /etc/cif/csirtg-smrt.yml

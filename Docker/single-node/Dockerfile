@@ -1,6 +1,6 @@
 #----------------------------------------------------
 # hadolint ignore=DL3007
-FROM cif-base:latest as builder
+FROM cif-build:latest as builder
 
 #----------------------------------------------------
 # s6 builder
@@ -47,6 +47,7 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG VIRTUAL_ENV="/cif_venv"
 ARG PATH="$VIRTUAL_ENV/bin:$PATH"
 
+COPY --from=builder /tmp/bearded-avenger/rules/default /etc/cif/rules/default
 COPY --from=builder /cif_venv /cif_venv
 COPY --from=s6 /tmp/s6-overlay-noarch.tar.xz /tmp/
 COPY --from=s6 /tmp/s6-overlay-x86_64.tar.xz /tmp/
@@ -58,6 +59,7 @@ RUN set -e; set -x \
   >> /etc/security/limits.conf \
 && echo "cif             hard    nofile            30000" \
   >> /etc/security/limits.conf \
+\
 && apt-get update \
 && apt-get --no-install-recommends install -y \
   curl \
@@ -73,12 +75,18 @@ RUN set -e; set -x \
   cif \
 && chown root:cif /cif_venv \
 && chmod 750 /cif_venv \
-&& mkdir /etc/cif \
 && echo "VIRTUAL_ENV=${VIRTUAL_ENV}" > /home/cif/.bash_aliases \
 && echo 'PATH="${VIRTUAL_ENV}/bin:${PATH}"' >> /home/cif/.bash_aliases \
+&& chown root:cif /etc/cif/rules/default/* \
+&& chmod 0640 /etc/cif/rules/default/* \
+\
 && tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
-&& tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
+&& tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz \
+&& rm -rf /tmp/s6-overlay-noarch.tar.xz \
+&& rm -rf /tmp/s6-overlay-x86_64.tar.xz
+#&& mkdir /etc/cif \
 
+# Finish s6 setup
 COPY ./s6/etc-cont-init.d/ /etc/cont-init.d/
 COPY ./s6/etc-s6-overlay-s6-rc.d/ /etc/s6-overlay/s6-rc.d/
 
@@ -90,6 +98,7 @@ RUN chmod 0750 /etc/cont-init.d/*.sh \
 \
 && touch /etc/s6-overlay/s6-rc.d/user/contents.d/01-cif-router \
 && touch /etc/s6-overlay/s6-rc.d/user/contents.d/02-cif-httpd \
+&& touch /etc/s6-overlay/s6-rc.d/user/contents.d/03-csirtg-smrt \
 && chmod 0440 /etc/s6-overlay/s6-rc.d/user/contents.d/* \
 \
 && chown -R root:cif /etc/s6-overlay/s6-rc.d/

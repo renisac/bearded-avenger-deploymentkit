@@ -7,7 +7,7 @@ services:
       context: ./cif-python
     image: cif-python
 
-  cif-base:
+  cif-build:
     build:
-      context: ./cif-base
-    image: cif-base
+      context: ./cif-build
+    image: cif-build
