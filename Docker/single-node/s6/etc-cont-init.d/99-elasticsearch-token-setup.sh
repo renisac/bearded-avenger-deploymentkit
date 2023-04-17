@@ -82,3 +82,9 @@ else
   /cif_venv/bin/cif-store -d --store elasticsearch --nodes ${CIF_STORE_NODES} \
     --token-create-httpd --token ${CIF_HTTPD_TOKEN} --token-groups everyone
 fi
+
+# Create kibana index
+
+curl -XPUT \
+  "http://${CIF_STORE_NODES}/.kibana/index-pattern/indicators-*" \
+  -d '{"title" : "indicators-*",  "timeFieldName": "lasttime"}'
