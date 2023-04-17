@@ -8,6 +8,9 @@ services:
     build:
       context: ./single-node
     image: cif
+    container_name: cif
+    depends_on:
+      - es01
     volumes:
       #- ./:/shared:rw
       - ./scraps/smrt_cache:/var/lib/smrt:rw
@@ -26,6 +29,11 @@ services:
       #SERVICE_STOP_SMRT: 1
     ports:
       - 0.0.0.0:5000:5000
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:5000"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
@@ -41,22 +49,29 @@ services:
       - xpack.graph.enabled=false
       - xpack.watcher.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:9200"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
     ulimits:
       memlock:
         soft: -1
         hard: -1
     ports:
       - 0.0.0.0:9200:9200
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9200"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.6.16
     container_name: kibana
+    depends_on:
+      - cif
     environment:
-      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_URL: 'http://es01:9200'
     ports:
       - 0.0.0.0:5601:5601
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:5601"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
