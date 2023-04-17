@@ -1,21 +1,30 @@
 #!/usr/bin/env sh
 
+old_dc=$(which docker-compose > /dev/null; echo $?)
+
+if [ $old_dc != 1 ]
+then
+  dc_exe="docker-compose"
+else
+  dc_exe="docker compose"
+fi
+
 # build and/or pull needed images
 docker pull ubuntu:22.04
 
-docker-compose -f docker-compose.build_deps.yml build --progress plain cif-python
+$dc_exe -f docker-compose.build_deps.yml build --progress plain cif-python
 
 if [ -f ./secrets/docker-compose.deploy_key.yml ]
 then
-  docker-compose -f docker-compose.build_deps.yml -f secrets/docker-compose.deploy_key.yml build --progress plain cif-build
+  $dc_exe -f docker-compose.build_deps.yml -f secrets/docker-compose.deploy_key.yml build --progress plain cif-build
 else
   echo "public BA build"
   #docker-compose -f docker-compose.build_deps.yml build --progress plain cif-build
 fi
 
-docker-compose -f docker-compose.yml build --progress tty cif
-docker-compose -f docker-compose.yml up
-docker-compose -f docker-compose.yml down
+$dc_exe -f docker-compose.yml build --progress plain cif
+$dc_exe -f docker-compose.yml up
+$dc_exe -f docker-compose.yml down
 
 #docker-compose -f docker-compose.multi.yml build cif-router
 #docker-compose -f docker-compose.multi.yml build cif-smrt

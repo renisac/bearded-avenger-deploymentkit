@@ -74,7 +74,5 @@ RUN python3.9 -m pip install --no-cache-dir -r requirements.txt \
 COPY --from=git-repos /tmp/bearded-avenger /tmp/bearded-avenger
 WORKDIR /tmp/bearded-avenger
 RUN python3.9 -m pip install --no-cache-dir -r dev_requirements.txt \
+&& python3.9 setup.py test \
 && python3.9 -m pip install --no-cache-dir .
-
-#RUN python3.9 setup.py test
-
