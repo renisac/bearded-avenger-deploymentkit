@@ -3,6 +3,10 @@ version: "3"
 volumes:
   es01-data:
 
+networks:
+  my-cif-network:
+    name: cif-network
+
 services:
   cif:
     build:
@@ -27,8 +31,10 @@ services:
       CIF_HUNTER_THREADS: 2
       CIF_HUNTER_ADVANCED: 1
       #SERVICE_STOP_SMRT: 1
+    networks:
+      - my-cif-network
     ports:
-      - 0.0.0.0:5000:5000
+      - 127.0.0.1:5000:5000
     healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:5000"]
         interval: 30s
@@ -53,8 +59,10 @@ services:
       memlock:
         soft: -1
         hard: -1
+    networks:
+      - my-cif-network
     ports:
-      - 0.0.0.0:9200:9200
+      - 127.0.0.1:9200:9200
     healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:9200"]
         interval: 30s
@@ -68,8 +76,10 @@ services:
       - cif
     environment:
       ELASTICSEARCH_URL: 'http://es01:9200'
+    networks:
+      - my-cif-network
     ports:
-      - 0.0.0.0:5601:5601
+      - 127.0.0.1:5601:5601
     healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:5601"]
         interval: 30s

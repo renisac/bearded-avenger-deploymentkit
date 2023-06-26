@@ -12,11 +12,11 @@ fi
 # build and/or pull needed images
 docker pull ubuntu:22.04
 
-$dc_exe -f docker-compose.build_deps.yml build --progress plain cif-python
+$dc_exe -f build-containers/docker-compose.yml build --progress plain cif-python
 
 if [ -f ./secrets/docker-compose.deploy_key.yml ]
 then
-  $dc_exe -f docker-compose.build_deps.yml -f secrets/docker-compose.deploy_key.yml build --progress plain cif-build
+  $dc_exe -f build-containers/docker-compose.yml -f secrets/docker-compose.deploy_key.yml build --progress plain cif-build
 else
   echo "public BA build"
   #docker-compose -f docker-compose.build_deps.yml build --progress plain cif-build
