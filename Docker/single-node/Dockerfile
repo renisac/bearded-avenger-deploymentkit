@@ -84,7 +84,6 @@ RUN set -e; set -x \
 && tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz \
 && rm -rf /tmp/s6-overlay-noarch.tar.xz \
 && rm -rf /tmp/s6-overlay-x86_64.tar.xz
-#&& mkdir /etc/cif \
 
 # Finish s6 setup
 COPY ./s6/etc-cont-init.d/ /etc/cont-init.d/

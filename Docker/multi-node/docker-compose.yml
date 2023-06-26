@@ -33,7 +33,7 @@ services:
   cif-smrt:
     build:
       context: ./smrt
-    image: smrt
+    image: cif-smrt
     volumes:
       - ./:/shared:rw
       - ./scraps/smrt_cache:/var/lib/smrt:rw

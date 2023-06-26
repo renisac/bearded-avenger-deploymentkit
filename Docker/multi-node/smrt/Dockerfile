@@ -64,7 +64,6 @@ RUN set -e; set -x \
   cif \
 && chown root:cif /cif_venv \
 && chmod 750 /cif_venv \
-&& mkdir /etc/cif \
 && echo "VIRTUAL_ENV=${VIRTUAL_ENV}" > /home/cif/.bash_aliases \
 && echo 'PATH="${VIRTUAL_ENV}/bin:${PATH}"' >> /home/cif/.bash_aliases \
 && chown root:cif /etc/cif/rules/default/* \
