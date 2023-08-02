@@ -16,9 +16,9 @@ services:
     depends_on:
       - es01
     volumes:
-      #- ./:/shared:rw
       - ./scraps/smrt_cache:/var/lib/smrt:rw
       - ./scraps/geoip_dbs:/usr/share/GeoIP:ro
+      #- ./scraps/feeds:/etc/cif/rules/:ro
     environment:
       CIF_TOKEN: 'foo'
       CIF_HUNTER_TOKEN: 'bar'
@@ -30,7 +30,7 @@ services:
       CIF_GATHERER_THREADS: 2
       CIF_HUNTER_THREADS: 2
       CIF_HUNTER_ADVANCED: 1
-      #SERVICE_STOP_SMRT: 1
+      SMRT_SERVICE_ENABLE: 0
     networks:
       - my-cif-network
     ports:

@@ -1,27 +1,24 @@
 # Notice
 
-This is a temporary fork of the [CSIRT Gadgets bearded-avenger-deploymentkit repository](https://github.com/csirtgadgets/bearded-avenger-deploymentkit).
+This is a fork of the archived [CSIRT Gadgets bearded-avenger-deploymentkit repository](https://github.com/csirtgadgets/bearded-avenger-deploymentkit)
 
-The plan is to clean up the changes and submit PRs to the parent repositories.
-
-# Getting Started
+## General Information
 
 * this deployment runs on Ubuntu 22.04
-* cif and the dependencies run in a python 3.10 venv
-  * python 3.10 is the version shipped with Ubuntu 22.04
+* cif and the dependencies run in a python 3.9 venv
+  * python 3.9 comes from the deadsnakes ppa
 * this sets up the latest versions of cifv3 and dependencies
 * this repo has integrated the csirtgadgets.cif Ansible role
 
-## Todo
+## Docker quick start
 
-* VM amd Docker
-  * fix sdist.yml (cif-ansible-role repo)
-* Docker
-  * run bootstrap tests
+* To enable smrt feed downloads, comment out this env var in Docker/docker-compose.yml
+    * ```SMRT_SERVICE_ENABLE```
+* Build and run
 
-## Wontfix
-
-* CentOS/RHEL support
+        cd Docker
+        bash ./single-node-build.sh
+        docker compose up -d
 
 ## Installation (VM or bare metal)
 
@@ -55,58 +52,80 @@ The plan is to clean up the changes and submit PRs to the parent repositories.
 
 ## Docker
 
-* Requirements: have docker and docker-compose installed
+### Requirements
 
-* build image (same for sqlite3 or ES backends)
+* have docker and docker-compose installed
 
-      cd bearded-avenger-deploymentkit
-      docker-compose build
+### Single node
 
-* To use the sqlite backend:
+This brings up a CIF container, an Elastic container, and a Kibana container
 
-      docker-compose up -d
+* Go to the Docker directory
+    * ```cd Docker/```
+* Build the cif image (and it's base containers)
+    * ```bash ./single-node-build.sh```
+* Bring up the environment
+    *  ```docker compose up -d```
 
-* to use the Elastic backend:
+The following services are exposed by default from the docker-compose.yml file:
 
-      cp overrides/docker-compose.elasticsearch.yml docker-compose.override.yml
-      docker-compose up -d
+* CIF: http://127.0.0.1:5000
+* Kibana: http://127.0.0.1:5601
+* Elastic: http://127.0.0.1:9200
 
-* get a shell on running container, switch to cif user, and test connectivity
+The default docker-compose.yml disables the smrt service (which downloads feeds). To enable the service,
+either comment out the ```SMRT_SERVICE_ENABLE``` or override it with ```SMRT_SERVICE_ENABLE=1```
 
-      docker-compose exec cifv3 /bin/bash
+### Geoip database
+
+You will need a valid Maxmind account to download the GeoIP2 or GeoLite2 databases.
+
+* Copy the env template for the geoipupdate container
+    * ```cp Docker/secrets/geoipupdate_env.example Docker/secrets/geoipupdate_env```
+* U pdate geoipupdate_env with your Maxmind credentials
+* Run the geoipupdate container to download the files
+    * ```cd Docker && bash ./update_geoip_db.sh```
+* Database files can be found here:
+    * ```Docker/scraps/geo_ips```
+
+### Multiple nodes
+
+This deploys CIF services across multiple containers and mimics a potential production deployment.
+
+* In Progress
+
+### Common tasks
+
+* Start a shell on running container, switch to cif user, and test connectivity
+
+      docker compose exec cif /bin/bash
       sudo -u cif -i
       cif -p
 
-* optional build args to pull from private Github repo (see overrides/docker-compose.deploy_key.yml)
+* optional build args to pull from private Github repo
 
   | build arg | example value | info |
   | --- | --- | --- |
-  | CIF_RELEASE_URL | git@github.com:yourorg/cifv3_code.git | ssh address for custom, cifv3 repo. if not specified uses default  [cifv3 repo](https://github.com/csirtgadgets/bearded-avenger/) |
+  | CIF_RELEASE_URL | git@github.com:yourorg/cifv3_code.git | ssh address for custom, cifv3 repo. if not specified uses default  [cifv3 repo](https://github.com/renisac/bearded-avenger/) |
   | GITHUB_DEPLOY_KEY_FILE | /tmp/github_deploy_key | path for github deploy key in container |
   | GITHUB_DEPLOY_KEY_BASE64 | n/a | base64 encoded private ssh key |
 
 * optional env vars
 
-  | env var | example value | info |
+  | env var | default value | info |
   | --- | --- | --- |
   | CIF_TOKEN | n/a |cif admin token |
   | CIF_HUNTER_TOKEN | n/a |cif hunter token |
   | CIF_HTTPD_TOKEN | n/a | cif httpd token |
   | CSIRTG_SMRT_TOKEN | n/a | cif smrt token |
   | CIF_HTTPD_LISTEN | "0.0.0.0" | cif-httpd to listen externally (defaults to 127.0.0.1:5000) |
-  | SERVICE_STOP_SMRT | 1 | prevent smrt service from running |
-  | DOCKER_HTTPS | 1 | enable https |
+  | SMRT_SERVICE_ENABLE | 1 | enable smrt service |
 
-  * DOCKER_HTTPS
-    * if using the docker-compose.yml file, be sure to expose the https port
-    * to override the self signed certificates, bind mount the correct certs
-      at the following paths:
+## Wontfix
 
-          ssl_certificate /etc/nginx/ssl/nginx.crt;
-          ssl_certificate_key /etc/nginx/ssl/nginx.key;
-
-  * see overrides/docker-compose.elasticsearch.yml for cif env vars for ES
+* CentOS/RHEL support
 
 ---
 
 [Original Wiki](https://github.com/csirtgadgets/bearded-avenger-deploymentkit/wiki)
+[Forked Wiki](https://github.com/renisac/bearded-avenger-deploymentkit/wiki)

@@ -1,6 +1,6 @@
 #!/command/with-contenv sh
 
-if [ -n "${SERVICE_STOP_SMRT}" ]
+if [ "${SMRT_SERVICE_ENABLE}" = 0 ]
 then
   while true; do sleep 1; done
 fi
