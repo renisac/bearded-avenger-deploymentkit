@@ -77,6 +77,20 @@ RUN set -e; set -x \
 && chmod 750 /cif_venv \
 && echo "VIRTUAL_ENV=${VIRTUAL_ENV}" > /home/cif/.bash_aliases \
 && echo 'PATH="${VIRTUAL_ENV}/bin:${PATH}"' >> /home/cif/.bash_aliases \
+\
+&& install \
+  -m 0640 \
+  -g cif \
+  -o cif \
+  /dev/null \
+  /home/cif/.cif.yml \
+&& install \
+  -m 0640 \
+  -g root \
+  -o root \
+  /dev/null \
+  /root/.cif.yml \
+\
 && chown root:cif /etc/cif/rules/default/* \
 && chmod 0640 /etc/cif/rules/default/* \
 \

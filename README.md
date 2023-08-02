@@ -99,7 +99,7 @@ This deploys CIF services across multiple containers and mimics a potential prod
 * Start a shell on running container, switch to cif user, and test connectivity
 
       docker compose exec cif /bin/bash
-      sudo -u cif -i
+      . /cif_venv/bin/activate
       cif -p
 
 * optional build args to pull from private Github repo
