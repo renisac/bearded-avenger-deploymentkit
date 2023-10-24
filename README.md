@@ -12,13 +12,25 @@ This is a fork of the archived [CSIRT Gadgets bearded-avenger-deploymentkit repo
 
 ## Docker quick start
 
-* To enable smrt feed downloads, comment out this env var in Docker/docker-compose.yml
-    * ```SMRT_SERVICE_ENABLE```
+By default the environment will start up, but will not start pulling feed data.
+
 * Build and run
 
         cd Docker
         bash ./single-node-build.sh
+        docker compose pull
         docker compose up -d
+
+* The docker-compose.override-example.yml allows for some service customization
+    * replace default rules/feeds with custom items
+        * ```./scraps/rules:/etc/cif/rules/```
+    * persist cached files used by smrt
+        * ```./scraps/smrt_cache:/var/lib/smrt```
+    * folder mount for local copy of Maxmind GeoIP databases
+        * ```./scraps/geoip_dbs:/usr/share/GeoIP```
+    * enable smrt service to pull in feeds
+        * ```SMRT_SERVICE_ENABLE: 1```
+        * smrt will start to pull feeds after a minute of being active
 
 ## Installation (VM or bare metal)
 
@@ -64,8 +76,11 @@ This brings up a CIF container, an Elastic container, and a Kibana container
     * ```cd Docker/```
 * Build the cif image (and it's base containers)
     * ```bash ./single-node-build.sh```
+* Pull additional images from Docker Hub
+  * ```docker compose pull es01 kibana```
 * Bring up the environment
     *  ```docker compose up -d```
+* 
 
 The following services are exposed by default from the docker-compose.yml file:
 
@@ -82,7 +97,7 @@ You will need a valid Maxmind account to download the GeoIP2 or GeoLite2 databas
 
 * Copy the env template for the geoipupdate container
     * ```cp Docker/secrets/geoipupdate_env.example Docker/secrets/geoipupdate_env```
-* U pdate geoipupdate_env with your Maxmind credentials
+* Update geoipupdate_env with your Maxmind credentials
 * Run the geoipupdate container to download the files
     * ```cd Docker && bash ./update_geoip_db.sh```
 * Database files can be found here:
@@ -92,11 +107,11 @@ You will need a valid Maxmind account to download the GeoIP2 or GeoLite2 databas
 
 This deploys CIF services across multiple containers and mimics a potential production deployment.
 
-* In Progress
+* This is a work in progress
 
 ### Common tasks
 
-* Start a shell on running container, switch to cif user, and test connectivity
+* Start a shell on running container, activate CIF virtualenv, and test connectivity
 
       docker compose exec cif /bin/bash
       . /cif_venv/bin/activate

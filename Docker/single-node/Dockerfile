@@ -24,7 +24,7 @@ RUN apt-get update \
 && apt-get --no-install-recommends -y install \
   coreutils
 
-ARG S6_VERSION=3.1.0.1
+ARG S6_VERSION=3.1.5.0
 
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-noarch.tar.xz.sha256 /tmp/
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-noarch.tar.xz /tmp/
@@ -115,5 +115,12 @@ RUN chmod 0750 /etc/cont-init.d/*.sh \
 && chmod 0440 /etc/s6-overlay/s6-rc.d/user/contents.d/* \
 \
 && chown -R root:cif /etc/s6-overlay/s6-rc.d/
+
+HEALTHCHECK \
+  --interval=15s \
+  --timeout=15s \
+  --start-period=30s \
+  --retries=5 \
+  CMD curl --fail http://localhost:5000
 
 ENTRYPOINT ["/init"]

@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  cif:
+    volumes:
+      # use custom feeds instead of default feeds
+      - ./scraps/rules:/etc/cif/rules/:ro
+      - ./scraps/smrt_cache:/var/lib/smrt:rw
+      - ./scraps/geoip_dbs:/usr/share/GeoIP:ro
+    environment:
+      # enable feed pulls
+      SMRT_SERVICE_ENABLE: 1
