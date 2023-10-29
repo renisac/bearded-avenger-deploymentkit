@@ -117,10 +117,10 @@ RUN chmod 0750 /etc/cont-init.d/*.sh \
 && chown -R root:cif /etc/s6-overlay/s6-rc.d/
 
 HEALTHCHECK \
-  --interval=15s \
+  --interval=30s \
   --timeout=15s \
   --start-period=30s \
   --retries=5 \
-  CMD curl --fail http://localhost:5000
+  CMD curl --fail http://localhost:5000/health
 
 ENTRYPOINT ["/init"]
