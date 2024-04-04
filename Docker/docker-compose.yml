@@ -17,9 +17,13 @@ services:
       - es01
     environment:
       CIF_TOKEN: 'foo'
+      #ADMIN_TOKEN_GROUPS: "everyone,group1,group2"
       CIF_HUNTER_TOKEN: 'bar'
+      #HUNTER_TOKEN_GROUPS: "everyone,group1,group2"
       CSIRTG_SMRT_TOKEN: 'baz'
+      #CSIRTG_SMRT_TOKEN_GROUPS: "everyone,group1,group2"
       CIF_HTTPD_TOKEN: 'qux'
+      #HTTPD_TOKEN_GROUPS: "everyone,group1,group2"
       CIF_HTTPD_LISTEN: '0.0.0.0'
       CIF_STORE_STORE: 'elasticsearch'
       CIF_STORE_NODES: 'es01:9200'

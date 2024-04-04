@@ -129,10 +129,14 @@ This deploys CIF services across multiple containers and mimics a potential prod
 
   | env var | default value | info |
   | --- | --- | --- |
-  | CIF_TOKEN | n/a |cif admin token |
-  | CIF_HUNTER_TOKEN | n/a |cif hunter token |
-  | CIF_HTTPD_TOKEN | n/a | cif httpd token |
-  | CSIRTG_SMRT_TOKEN | n/a | cif smrt token |
+  | CIF_TOKEN | random hex string |cif admin token |
+  | ADMIN_TOKEN_GROUPS | "everyone" | string looks like "everyone,group1,group2" |
+  | CIF_HUNTER_TOKEN | random hex string |cif hunter token |
+  | HUNTER_TOKEN_GROUPS | "everyone" | string looks like "everyone,group1,group2" |
+  | CIF_HTTPD_TOKEN | random hex string | cif httpd token |
+  | HTTPD_TOKEN_GROUPS | "everyone" | string looks like "everyone,group1,group2" |
+  | CSIRTG_SMRT_TOKEN | random hex string | cif smrt token |
+  | CSIRTG_SMRT_TOKEN_GROUPS | "everyone" | string looks like "everyone,group1,group2" |
   | CIF_HTTPD_LISTEN | "0.0.0.0" | cif-httpd to listen externally (defaults to 127.0.0.1:5000) |
   | SMRT_SERVICE_ENABLE | 1 | enable smrt service |
 
