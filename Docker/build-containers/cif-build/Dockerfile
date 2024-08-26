@@ -49,12 +49,13 @@ RUN set -e; set -x \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/*
 
+# https://github.com/pypa/setuptools/issues/4483
 RUN python3.9 -m venv $VIRTUAL_ENV \
 && python3.9 -m pip install --upgrade --no-cache-dir pip \
 && python3.9 -m pip install --upgrade --no-cache-dir \
   cython \
   pytest \
-  setuptools \
+  'setuptools<71.0.0' \
   singledispatch \
   wheel
 
